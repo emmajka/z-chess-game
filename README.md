@@ -22,3 +22,13 @@ Your task is to create an application, that will enable the user to move chess p
 For convenience and easier testing, you are provided with /client which should read and log all messages that were sent to
 the configured topic. Also, you can use file under /docker-compose to set up Kafka for testing the implementation. If you need feel free to extend compose file.
 
+
+# How To
+
+## run application
+In order to run the application following `sbt` command needs to executed via a terminal
+
+        sbt application/run
+
+## open API
+Open API documentation is available under `http://localhost:8081/docs`

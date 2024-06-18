@@ -1,4 +1,5 @@
-package http
+package http.route
+
 import sttp.tapir.ztapir.ZServerEndpoint
 
 sealed trait HttpRoute {
@@ -6,3 +7,5 @@ sealed trait HttpRoute {
 }
 
 trait HealthRoute extends HttpRoute
+
+trait OpenApiRoute extends HttpRoute

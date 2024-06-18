@@ -1,6 +1,7 @@
 package http
 
 import com.comcast.ip4s.{Port, ipv4}
+import http.route.HttpRoute
 import org.http4s.ember.server.EmberServerBuilder
 import sttp.tapir.server.http4s.ztapir.ZHttp4sServerInterpreter
 import zio.*
