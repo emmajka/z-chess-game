@@ -1,6 +1,6 @@
 import http.Http4sServer
-import http.route.impl.{HealthRouteImpl, OpenApiRouteImpl}
-import http.route.{HealthRoute, HttpRoute}
+import http.route.impl.{ChessGameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
+import http.route.{ChessGameRoute, HealthRoute, HttpRoute}
 import zio.{Fiber, Scope, ZIO, ZIOAppArgs, ZIOAppDefault}
 
 object Application extends ZIOAppDefault {
@@ -19,8 +19,9 @@ object Application extends ZIOAppDefault {
 
   private def getAllRoutes = {
     for healthRoute <- ZIO.service[HealthRoute]
-        appRoutes: Seq[HttpRoute] = Seq(healthRoute)
+        chessRoute <- ZIO.service[ChessGameRoute]
+        appRoutes: Seq[HttpRoute] = Seq(healthRoute, chessRoute)
         openApiRoute = OpenApiRouteImpl(appRoutes)
     yield Seq(healthRoute, openApiRoute)
-  }.provide(HealthRouteImpl.layer)
+  }.provide(HealthRouteImpl.layer, ChessGameRouteImpl.layer)
 }
