@@ -15,7 +15,7 @@ lazy val client = (project in file("client"))
   )
 
 lazy val root = (project in file("."))
-  .aggregate(application, client)
+  .aggregate(application)
   .settings(
     name := "recruitment-task-beone",
     run := (application / Compile / run).evaluated,
