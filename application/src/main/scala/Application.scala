@@ -1,5 +1,6 @@
 import cfg.{ConfigProvider, HttpConfig}
 import http.Http4sServer
+import http.handler.impl.ChessGameAdminHandlerImpl
 import http.route.impl.{ChessGameAdminRouteImpl, ChessGameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
 import http.route.{ChessGameAdminRoute, ChessGameRoute, HealthRoute, HttpRoute}
 import zio.{Fiber, ZIO, ZIOAppArgs, ZIOAppDefault, ZLayer}
@@ -19,7 +20,13 @@ object Application extends ZIOAppDefault {
     _              <- Fiber.collectAll(List(f1)).join
     yield ()
 
-  }.provide(HttpConfig.live)
+  }.provide(
+    HttpConfig.live,
+    HealthRouteImpl.live,
+    ChessGameRouteImpl.live,
+    ChessGameAdminRouteImpl.live,
+    ChessGameAdminHandlerImpl.live
+  )
 
   private def getAllRoutes = {
     for healthRoute <- ZIO.service[HealthRoute]
@@ -27,6 +34,6 @@ object Application extends ZIOAppDefault {
     chessAdminRoute <- ZIO.service[ChessGameAdminRoute]
     appRoutes    = Seq(healthRoute, chessRoute, chessAdminRoute)
     openApiRoute = OpenApiRouteImpl(appRoutes)
-    yield Seq(healthRoute, openApiRoute)
-  }.provide(HealthRouteImpl.live, ChessGameRouteImpl.live, ChessGameAdminRouteImpl.live)
+    yield Seq(healthRoute, chessRoute, chessAdminRoute, openApiRoute)
+  }
 }
