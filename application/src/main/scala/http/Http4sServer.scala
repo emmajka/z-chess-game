@@ -12,7 +12,7 @@ object Http4sServer {
     EmberServerBuilder
       .default[Task]
       .withHost(ipv4"0.0.0.0")
-      .withPort(Port.fromInt(8081).get)
+      .withPort(Port.fromInt(port).get)
       .withHttpApp {
         val appRoutes = routes.flatMap(_.routes).toList
         ZHttp4sServerInterpreter().from(appRoutes).toRoutes.orNotFound

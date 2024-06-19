@@ -1,27 +1,31 @@
+import cfg.{ConfigProvider, HttpConfig}
 import http.Http4sServer
 import http.route.impl.{ChessGameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
 import http.route.{ChessGameRoute, HealthRoute, HttpRoute}
-import zio.{Fiber, Scope, ZIO, ZIOAppArgs, ZIOAppDefault}
+import zio.{Fiber, ZIO, ZIOAppArgs, ZIOAppDefault, ZLayer}
 
 object Application extends ZIOAppDefault {
 
-  override def run: ZIO[Any with ZIOAppArgs with Scope, Any, Any] = {
+  override val bootstrap: ZLayer[ZIOAppArgs, Any, Any] = ConfigProvider.hocon
 
-    (for _ <- ZIO.log("hello world")
-         routes <- getAllRoutes
-         _ <- ZIO.logInfo("Setting up http server...")
-         f1 <- Http4sServer.run(routes = routes, 8081).fork
-         _ <- ZIO.logInfo("Http server up & running")
-         _ <- Fiber.collectAll(List(f1)).join
+  override def run: ZIO[ZIOAppArgs, Any, Any] = {
+
+    for _          <- ZIO.log("hello world")
+    routes         <- getAllRoutes
+    httpServerPort <- ZIO.service[HttpConfig].map(_.port)
+    _              <- ZIO.logInfo(s"Setting up http server on port $httpServerPort...")
+    f1             <- Http4sServer.run(routes = routes, httpServerPort).fork
+    _              <- ZIO.logInfo("Http server up & running")
+    _              <- Fiber.collectAll(List(f1)).join
     yield ()
-      ).provide()
-  }
+
+  }.provide(HttpConfig.live)
 
   private def getAllRoutes = {
     for healthRoute <- ZIO.service[HealthRoute]
-        chessRoute <- ZIO.service[ChessGameRoute]
-        appRoutes: Seq[HttpRoute] = Seq(healthRoute, chessRoute)
-        openApiRoute = OpenApiRouteImpl(appRoutes)
+    chessRoute      <- ZIO.service[ChessGameRoute]
+    appRoutes    = Seq(healthRoute, chessRoute)
+    openApiRoute = OpenApiRouteImpl(appRoutes)
     yield Seq(healthRoute, openApiRoute)
   }.provide(HealthRouteImpl.layer, ChessGameRouteImpl.layer)
 }
