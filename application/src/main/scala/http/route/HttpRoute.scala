@@ -7,7 +7,6 @@ sealed trait HttpRoute {
 }
 
 trait HealthRoute extends HttpRoute
-
 trait OpenApiRoute extends HttpRoute
-
 trait ChessGameRoute extends HttpRoute
+trait ChessGameAdminRoute extends HttpRoute

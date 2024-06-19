@@ -11,9 +11,7 @@ case class ChessGameRouteImpl() extends ChessGameRoute {
   override def routes: Seq[ZServerEndpoint[Any, Any]] = Seq(
     deletePieceEndpoint.zServerLogic(_ => ZIO.logInfo("DELETE a chess piece from the board!") *> ZIO.unit),
     addPieceEndpoint.zServerLogic(_ => ZIO.logInfo("Add a chess piece to the game!") *> ZIO.unit),
-    movePieceEndpoint.zServerLogic(_ => ZIO.logInfo("Move a chess piece on the board!") *> ZIO.unit),
-    getGameStateEndpoint.zServerLogic(_ => ZIO.logInfo("Get chess game state!") *> ZIO.unit),
-    initGameEndpoint.zServerLogic(_ => ZIO.logInfo("Initialize a new chess game!") *> ZIO.unit),
+    movePieceEndpoint.zServerLogic(_ => ZIO.logInfo("Move a chess piece on the board!") *> ZIO.unit)
   )
 }
 
@@ -22,23 +20,19 @@ object ChessGameRouteImpl {
     .in("piece")
     .errorOut(ErrorResponse.errorBody)
     .description("Delete a piece from a chess board for given game")
+    .tag("chess game play operations")
 
   val addPieceEndpoint: PublicEndpoint[Unit, ErrorResponse, Unit, Any] = endpoint.post
     .in("piece")
     .errorOut(ErrorResponse.errorBody)
     .description("Place a new chess piece on a chess board for given game")
+    .tag("chess game play operations")
+
   val movePieceEndpoint: PublicEndpoint[Unit, ErrorResponse, Unit, Any] = endpoint.put
     .in("piece")
     .errorOut(ErrorResponse.errorBody)
     .description("Move a piece on a chess board for given game")
-  val getGameStateEndpoint: PublicEndpoint[Unit, ErrorResponse, Unit, Any] = endpoint.get
-    .in("state")
-    .errorOut(ErrorResponse.errorBody)
-    .description("Retrieve given game state")
-  val initGameEndpoint: PublicEndpoint[Unit, ErrorResponse, Unit, Any] = endpoint.post
-    .in("init")
-    .errorOut(ErrorResponse.errorBody)
-    .description("Initialize a new game")
+    .tag("chess game play operations")
 
-  lazy val layer = ZLayer.derive[ChessGameRouteImpl]
+  lazy val live = ZLayer.derive[ChessGameRouteImpl]
 }

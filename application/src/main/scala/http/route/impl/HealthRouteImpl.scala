@@ -17,6 +17,7 @@ object HealthRouteImpl {
   val healthEndpoint: PublicEndpoint[Unit, ErrorResponse, Unit, Any] = endpoint.get
     .in("health")
     .errorOut(ErrorResponse.errorBody)
+    .tag("utility operations")
 
-  lazy val layer = ZLayer.derive[HealthRouteImpl]
+  lazy val live = ZLayer.derive[HealthRouteImpl]
 }
