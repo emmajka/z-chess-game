@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  mysql:
+    container_name: db
+    image: mysql:8.4.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: adminpass
+      MYSQL_DATABASE: db
+    networks:
+      - iceo-task
+  mysql-flyway:
+    image: flyway/flyway:10.15.0
+    profiles:
+      - "install"
+    depends_on:
+      - mysql
+    volumes:
+      - ../db/migration:/flyway/sql
+    command:
+      - -url=jdbc:mysql://mysql:3306/db?allowPublicKeyRetrieval=true
+      - -user=root
+      - -password=root
+      - migrate
+    networks:
+      - iceo-task
+networks:
+  iceo-task:
+    name: iceo-task
