@@ -43,6 +43,7 @@ object Dependencies {
   )
   val application: Seq[ModuleID]    = zio ++ tapir ++ http4s ++ serde ++ configZio
   val infrastructure: Seq[ModuleID] = zio ++ configZio
+  val domain: Seq[ModuleID]         = zio
   val client: Seq[ModuleID]         = config ++ zio
 
 }
