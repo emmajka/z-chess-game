@@ -1,11 +1,11 @@
 package http.route.impl
 
 import http.handler.ChessGameAdminHandler
-import http.model.ErrorResponse
+import http.model.{ApplicationHttpResponse, ErrorResponse, GetGameDetailsResponse}
+import http.route.ChessGameAdminRoute
 import http.route.impl.ChessGameAdminRouteImpl.*
-import http.route.{ChessGameAdminRoute, ChessGameRoute}
+import sttp.tapir.json.zio.jsonBody
 import sttp.tapir.ztapir.*
-import sttp.tapir.{PublicEndpoint, endpoint}
 import zio.*
 
 case class ChessGameAdminRouteImpl(chessGameAdminHandler: ChessGameAdminHandler) extends ChessGameAdminRoute {
@@ -13,14 +13,27 @@ case class ChessGameAdminRouteImpl(chessGameAdminHandler: ChessGameAdminHandler)
     initGameEndpoint.zServerLogic(_ =>
       chessGameAdminHandler.initGame
         .catchAll(err => ZIO.logError(s"Error! $err") *> ZIO.fail(ErrorResponse(message = err.getMessage)))
-    )
+    ),
+    getGameDetailsEndpoint.zServerLogic { gameId =>
+      (for result <- chessGameAdminHandler.getGameDetails(gameId)
+      yield ApplicationHttpResponse(body = GetGameDetailsResponse(gameId = result))).catchAll(err =>
+        ZIO.logError(s"Error! $err") *> ZIO.fail(ErrorResponse(message = err.getMessage))
+      )
+    }
   )
 }
 
 object ChessGameAdminRouteImpl {
 
-  val initGameEndpoint: PublicEndpoint[Unit, ErrorResponse, Unit, Any] = endpoint.post
+  private val initGameEndpoint = endpoint.post
     .in("init")
+    .errorOut(ErrorResponse.errorBody)
+    .description("Initialize a new game")
+    .tag("chess game administration operations")
+
+  private val getGameDetailsEndpoint = endpoint.get
+    .in("init" / path[String]("gameId"))
+    .out(jsonBody[ApplicationHttpResponse[GetGameDetailsResponse]])
     .errorOut(ErrorResponse.errorBody)
     .description("Initialize a new game")
     .tag("chess game administration operations")

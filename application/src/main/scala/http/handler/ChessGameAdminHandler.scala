@@ -1,7 +1,8 @@
 package http.handler
 
-import zio.ZIO
+import zio.{Task, ZIO}
 
 trait ChessGameAdminHandler {
-  def initGame: ZIO[Any, Exception, Unit]
+  def initGame: Task[Unit]
+  def getGameDetails(gameId: String): Task[String]
 }
