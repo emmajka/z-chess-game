@@ -15,9 +15,11 @@ case class ChessGameAdminRouteImpl(chessGameAdminHandler: ChessGameAdminHandler)
         .catchAll(err => ZIO.logError(s"Error! $err") *> ZIO.fail(ErrorResponse(message = err.getMessage)))
     ),
     getGameDetailsEndpoint.zServerLogic { gameId =>
-      (for result <- chessGameAdminHandler.getGameDetails(gameId)
-      yield ApplicationHttpResponse(body = GetGameDetailsResponse(gameId = result))).catchAll(err =>
-        ZIO.logError(s"Error! $err") *> ZIO.fail(ErrorResponse(message = err.getMessage))
+      {
+        for result <- chessGameAdminHandler.getGameDetails(gameId)
+        yield ApplicationHttpResponse(body = GetGameDetailsResponse(gameId = result))
+      }.catchAllCause(err =>
+        ZIO.logError(s"Failure! ${err.prettyPrint}") *> ZIO.fail(ErrorResponse(message = err.prettyPrint))
       )
     }
   )

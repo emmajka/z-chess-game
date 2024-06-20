@@ -3,6 +3,8 @@ import http.Http4sServer
 import http.handler.impl.ChessGameAdminHandlerImpl
 import http.route.impl.{ChessGameAdminRouteImpl, ChessGameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
 import http.route.{ChessGameAdminRoute, ChessGameRoute, HealthRoute, HttpRoute}
+import mysql.{MysqlConnection, MysqlCtx}
+import repository.impl.GameChessRepositoryImpl
 import zio.{Fiber, ZIO, ZIOAppArgs, ZIOAppDefault, ZLayer}
 
 object Application extends ZIOAppDefault {
@@ -25,7 +27,10 @@ object Application extends ZIOAppDefault {
     HealthRouteImpl.live,
     ChessGameRouteImpl.live,
     ChessGameAdminRouteImpl.live,
-    ChessGameAdminHandlerImpl.live
+    ChessGameAdminHandlerImpl.live,
+    GameChessRepositoryImpl.live,
+    MysqlConnection.ctx,
+    MysqlConnection.ds
   )
 
   private def getAllRoutes = {
