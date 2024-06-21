@@ -12,7 +12,7 @@ case class ChessGameQueriesMirror(context: SqlMirrorContext[MirrorSqlDialect, Sn
   def getChessGameDetailsByGameId(gameId: String): Task[QueryMirror[ChessGameDetails]] =
     ZIO.attempt(run(getChessGameDetailsByGameIdQuery(gameId = gameId)))
 
-  def initGameOfChess(newGameId: String): Task[ActionReturningMirror[ChessGameTable, ChessGameDetails]] =
+  def initGameOfChess(newGameId: String) =
     ZIO.attempt(run(initGameOfChessQuery(newGameId = newGameId)))
 
 }

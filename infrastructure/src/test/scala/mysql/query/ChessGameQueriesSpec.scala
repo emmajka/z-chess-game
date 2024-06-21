@@ -16,7 +16,7 @@ object ChessGameQueriesSpec extends ZIOSpecDefault {
     test("initGameOfChessQuery SQL content test") {
       for mirror <- mirrorRepo.initGameOfChess("someId")
       sql = mirror.string
-      yield assertTrue(sql == "")
+      yield assertTrue(sql == "INSERT INTO chess_game (game_id) VALUES (?)")
     }
   }
 }

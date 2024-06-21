@@ -16,10 +16,9 @@ trait ChessGameQueries [I <: Idiom]{
     for chessGame <- query[ChessGameTable].filter(cgt => cgt.gameId == lift(gameId)) 
       yield ChessGameDetails(id = chessGame.id, gameId = chessGame.gameId)
     
-  inline def initGameOfChessQuery(newGameId: String): ActionReturning[ChessGameTable, ChessGameDetails] = 
+  inline def initGameOfChessQuery(newGameId: String): Insert[ChessGameTable] = 
     query[ChessGameTable]
     .insert(_.gameId -> lift(newGameId))
-    .returningGenerated(created => ChessGameDetails(id = created.id, gameId = created.gameId))
 
 
 }

@@ -19,10 +19,10 @@ case class GameChessRepositoryImpl(context: MysqlCtx, datasource: DataSource)
     with MysqlRepository {
 
   import context.*
-  override def getChessGameDetails(gameId: String): IO[Exception, List[ChessGameDetails]] =
+  override def getChessGameDetails(gameId: String): IO[Exception, Seq[ChessGameDetails]] =
     executeSelect(getChessGameDetailsByGameIdQuery(gameId = gameId))
 
-  override def initGameOfChess(newGameId: String): IO[Exception, ChessGameDetails] = {
+  override def initGameOfChess(newGameId: String): IO[Exception, Long] = {
     executeInsert(initGameOfChessQuery(newGameId = newGameId))
   }
 }
