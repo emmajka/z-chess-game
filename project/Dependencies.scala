@@ -19,6 +19,11 @@ object Dependencies {
     "dev.zio" %% "zio-kafka" % "2.7.4"
   )
 
+  lazy val zioTest: Seq[ModuleID] = Seq(
+    "dev.zio" %% "zio-test"     % "2.0.9" % "test",
+    "dev.zio" %% "zio-test-sbt" % "2.0.9" % "test"
+  )
+
   lazy val serde: Seq[ModuleID] = Seq(
     "dev.zio" %% "zio-json" % Versions.jsonZio
   )
@@ -43,12 +48,11 @@ object Dependencies {
   )
 
   lazy val mysql: Seq[ModuleID] = Seq(
-    "io.getquill" %% "quill-jdbc-zio" % "4.6.0",
-    "mysql"% "mysql-connector-java" % "8.0.33"
-
+    "io.getquill" %% "quill-jdbc-zio"       % "4.6.0",
+    "mysql"        % "mysql-connector-java" % "8.0.33"
   )
   val application: Seq[ModuleID]    = zio ++ tapir ++ http4s ++ serde ++ configZio
-  val infrastructure: Seq[ModuleID] = zio ++ configZio ++ mysql
+  val infrastructure: Seq[ModuleID] = zio ++ zioTest ++ configZio ++ mysql
   val domain: Seq[ModuleID]         = zio
   val client: Seq[ModuleID]         = config ++ zio
 

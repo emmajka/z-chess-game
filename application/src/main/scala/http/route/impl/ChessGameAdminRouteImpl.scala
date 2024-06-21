@@ -11,8 +11,12 @@ import zio.*
 case class ChessGameAdminRouteImpl(chessGameAdminHandler: ChessGameAdminHandler) extends ChessGameAdminRoute {
   override def routes: Seq[ZServerEndpoint[Any, Any]] = Seq(
     initGameEndpoint.zServerLogic(_ =>
-      chessGameAdminHandler.initGame
-        .catchAll(err => ZIO.logError(s"Error! $err") *> ZIO.fail(ErrorResponse(message = err.getMessage)))
+      {
+        for result <- chessGameAdminHandler.initGame
+        yield ()
+      }.catchAllCause(err =>
+        ZIO.logError(s"Failure! ${err.prettyPrint}") *> ZIO.fail(ErrorResponse(message = err.prettyPrint))
+      )
     ),
     getGameDetailsEndpoint.zServerLogic { gameId =>
       {

@@ -6,6 +6,7 @@ import io.getquill.context.qzio.ImplicitSyntax.*
 import model.ChessGameDetails
 import mysql.MysqlCtx
 import mysql.query.ChessGameQueries
+import mysql.schema.ChessGameTable
 import repository.{ChessGameRepository, MysqlRepository}
 import zio.{IO, ZLayer}
 
@@ -19,7 +20,11 @@ case class GameChessRepositoryImpl(context: MysqlCtx, datasource: DataSource)
 
   import context.*
   override def getChessGameDetails(gameId: String): IO[Exception, List[ChessGameDetails]] =
-    executeQuery(getChessGameDetailsByGameId(gameId = gameId))
+    executeSelect(getChessGameDetailsByGameIdQuery(gameId = gameId))
+
+  override def initGameOfChess(newGameId: String): IO[Exception, ChessGameDetails] = {
+    executeInsert(initGameOfChessQuery(newGameId = newGameId))
+  }
 }
 
 object GameChessRepositoryImpl {
