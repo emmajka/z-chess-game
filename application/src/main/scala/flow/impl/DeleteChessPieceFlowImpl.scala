@@ -12,3 +12,7 @@ case class DeleteChessPieceFlowImpl(chessGameRepository: ChessGameRepository) ex
       _ <- ZIO.fail(ChessPieceDoesNotExists(gameId = gameId, pieceId = pieceId)).when(deletedRows == 0)
     yield ()
 }
+
+object DeleteChessPieceFlowImpl {
+  lazy val live = ZLayer.derive[DeleteChessPieceFlowImpl]
+}
