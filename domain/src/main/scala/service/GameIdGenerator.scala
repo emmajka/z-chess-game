@@ -1,5 +1,5 @@
 package service
 
-trait IdGenerator {
+trait GameIdGenerator {
   def generate: String
 }

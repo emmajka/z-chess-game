@@ -37,14 +37,15 @@ trait ChessGameQueries[I <: Idiom] {
     for
       chessGame <- query[ChessGameTable]
         .filter(cgt => cgt.gameId == lift(gameId))
-      chessGamePieces <- query[ChessGamePiecesTable]
+      chessGamePiece <- query[ChessGamePiecesTable]
         .join(cgp => cgp.gameId == chessGame.gameId)
         .filter(cgp => cgp.active)
     yield ChessGamePiecesDetails(
-      pieceId = chessGamePieces.pieceId,
-      pieceType = chessGamePieces.pieceType,
-      xCoordinate = chessGamePieces.xCoordinate,
-      yCoordinate = chessGamePieces.yCoordinate
+      pieceId = chessGamePiece.pieceId,
+      pieceType = chessGamePiece.pieceType,
+      xCoordinate = chessGamePiece.xCoordinate,
+      yCoordinate = chessGamePiece.yCoordinate,
+      active = chessGamePiece.active
     )
 //  inline def insertIntoChessGamePiecesTable(gameId: String, pieceType:ChessPieceType): Insert[ChessGamePiecesTable] = {
 //    query[ChessGamePiecesTable].insert(

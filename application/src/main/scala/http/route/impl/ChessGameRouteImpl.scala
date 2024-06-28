@@ -1,5 +1,6 @@
 package http.route.impl
 
+import http.handler.ChessGameHandler
 import http.model.ErrorResponse
 import http.route.ChessGameRoute
 import http.route.impl.ChessGameRouteImpl.*
@@ -7,7 +8,7 @@ import sttp.tapir.ztapir.*
 import sttp.tapir.{PublicEndpoint, endpoint}
 import zio.*
 
-case class ChessGameRouteImpl() extends ChessGameRoute {
+case class ChessGameRouteImpl(chessGameHandler: ChessGameHandler) extends ChessGameRoute {
   override def routes: Seq[ZServerEndpoint[Any, Any]] = Seq(
     deletePieceEndpoint.zServerLogic(_ => ZIO.logInfo("DELETE a chess piece from the board!") *> ZIO.unit),
     addPieceEndpoint.zServerLogic(_ => ZIO.logInfo("Add a chess piece to the game!") *> ZIO.unit),

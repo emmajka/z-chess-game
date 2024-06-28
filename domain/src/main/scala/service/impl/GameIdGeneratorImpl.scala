@@ -1,9 +1,9 @@
 package service.impl
 
-import service.IdGenerator
+import service.GameIdGenerator
 import zio.ZLayer
 
-case class GameIdGeneratorImpl() extends IdGenerator {
+case class GameIdGeneratorImpl() extends GameIdGenerator {
   override def generate: String = System.currentTimeMillis().toString
 }
 

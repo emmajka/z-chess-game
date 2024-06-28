@@ -4,5 +4,6 @@ case class ChessGamePiecesDetails(
   pieceId: Int,
   pieceType: ChessPieceType,
   xCoordinate: Int,
-  yCoordinate: Int
+  yCoordinate: Int,
+  active: Boolean
 )
