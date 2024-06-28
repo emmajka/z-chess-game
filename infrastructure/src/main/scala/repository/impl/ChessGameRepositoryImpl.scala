@@ -1,6 +1,5 @@
 package repository.impl
 
-import exception.ChessGameException.ChessGameNotExists
 import io.getquill.*
 import model.{ChessGameDetails, ChessGamePiecesDetails, ChessPieceType, PieceCoordinates}
 import mysql.MysqlCtx
@@ -18,12 +17,8 @@ case class ChessGameRepositoryImpl(context: MysqlCtx, datasource: DataSource)
 
   import context.*
   import mysql.serde.ChessPieceType.*
-  override def getChessGameDetails(gameId: String): IO[Exception, ChessGameDetails] = {
-    for
-      qr <- executeSelect(getChessGameDetailsQuery(gameId = gameId))
-      result <- if qr.isEmpty then ZIO.fail(ChessGameNotExists(gameId = gameId)) else ZIO.succeed(qr.head)
-    yield result
-  }
+  override def getChessGameDetails(gameId: String): IO[Exception, Seq[ChessGameDetails]] =
+    executeSelect(getChessGameDetailsQuery(gameId = gameId))
 
   override def initGameOfChess(newGameId: String): IO[Exception, Long] =
     executeInsert(chessGameInsert(newGameId = newGameId))

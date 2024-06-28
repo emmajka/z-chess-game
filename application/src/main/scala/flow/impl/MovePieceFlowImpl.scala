@@ -1,9 +1,10 @@
 package flow.impl
 
 import flow.MovePieceFlow
+import repository.ChessGameRepository
 import zio.{Task, ZLayer}
 
-case class MovePieceFlowImpl() extends MovePieceFlow {
+case class MovePieceFlowImpl(gameServi: ChessGameRepository) extends MovePieceFlow {
   override def run: Task[Unit] = ???
 }
 

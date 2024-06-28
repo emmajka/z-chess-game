@@ -3,14 +3,13 @@ package flow.impl
 import flow.AddPieceFlow
 import model.{ChessPieceType, PieceCoordinates}
 import repository.ChessGameRepository
-import service.PieceIdCreator
+import service.{ChessGameService, PieceIdCreator}
 import zio.*
 
-case class AddPieceFlowImpl(chessGameRepository: ChessGameRepository, pieceIdCreator: PieceIdCreator) extends AddPieceFlow {
+case class AddPieceFlowImpl(chessGameRepository: ChessGameRepository, pieceIdCreator: PieceIdCreator, chessGameService: ChessGameService) extends AddPieceFlow {
   override def run(gameId: String, pieceType: ChessPieceType, newPieceCoordinate: PieceCoordinates): Task[Unit] =
     for
-      chessGameDetails <- chessGameRepository.getChessGameDetails(gameId = gameId)
-      chessGamePiecesDetails <- chessGameRepository.getChessGamePiecesDetails(gameId = gameId)
+      chessGamePiecesDetails <- chessGameService.getGameDetails(gameId = gameId)
       newPieceId <- ZIO.fromEither(
         pieceIdCreator.create(gameId = gameId, newPieceCoordinate = newPieceCoordinate, chessGamePiecesDetails = chessGamePiecesDetails)
       )

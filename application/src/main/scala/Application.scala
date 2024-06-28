@@ -6,7 +6,7 @@ import http.route.impl.{ChessGameAdminRouteImpl, ChessGameRouteImpl, HealthRoute
 import http.route.{ChessGameAdminRoute, ChessGameRoute, HealthRoute, HttpRoute}
 import mysql.{MysqlConnection, MysqlCtx}
 import repository.impl.ChessGameRepositoryImpl
-import service.impl.{GameIdGeneratorImpl, PieceIdCreatorImpl, PieceIdGeneratorImpl}
+import service.impl.{ChessGameServiceImpl, GameIdGeneratorImpl, PieceIdCreatorImpl, PieceIdGeneratorImpl}
 import validator.impl.GamePieceValidatorImpl
 import zio.{Fiber, ZIO, ZIOAppArgs, ZIOAppDefault, ZLayer}
 
@@ -33,6 +33,7 @@ object Application extends ZIOAppDefault {
     ChessGameAdminHandlerImpl.live,
     ChessGameHandlerImpl.live,
     ChessGameRepositoryImpl.live,
+    ChessGameServiceImpl.live,
     InitializeGameFlowImpl.live,
     RetrieveGameDetailsFlowImpl.live,
     AddPieceFlowImpl.live,

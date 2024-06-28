@@ -9,7 +9,7 @@ case class RetrieveGameDetailsFlowImpl(chessGameRepository: ChessGameRepository)
     for
       _ <- ZIO.logInfo(s"retrieval of game details for game with ID $gameId")
       gameDetails <- chessGameRepository.getChessGameDetails(gameId = gameId)
-    yield gameDetails.gameId // TODO error handling
+    yield "random for time being" // TODO error handling
 }
 
 object RetrieveGameDetailsFlowImpl {
