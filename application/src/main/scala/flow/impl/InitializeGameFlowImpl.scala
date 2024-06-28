@@ -1,11 +1,11 @@
 package flow.impl
 
-import flow.GameInitializationFlow
+import flow.InitializeGameFlow
 import repository.ChessGameRepository
 import service.GameIdGenerator
 import zio.*
 
-case class GameInitializationFlowImpl(idGenerator: GameIdGenerator, chessGameRepository: ChessGameRepository) extends GameInitializationFlow {
+case class InitializeGameFlowImpl(idGenerator: GameIdGenerator, chessGameRepository: ChessGameRepository) extends InitializeGameFlow {
   override def run(): Task[Unit] =
     val gameId = idGenerator.generate
     for _ <- ZIO.logInfo(s"generated game ID: $gameId")
@@ -13,6 +13,6 @@ case class GameInitializationFlowImpl(idGenerator: GameIdGenerator, chessGameRep
     yield()
 }
 
-object GameInitializationFlowImpl {
-  lazy val live = ZLayer.derive[GameInitializationFlowImpl]
+object InitializeGameFlowImpl {
+  lazy val live = ZLayer.derive[InitializeGameFlowImpl]
 }

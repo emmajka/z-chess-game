@@ -1,12 +1,12 @@
 package flow.impl
 
-import flow.AddChessPieceFlow
+import flow.AddPieceFlow
 import model.{ChessPieceType, PieceCoordinates}
 import repository.ChessGameRepository
 import service.PieceIdCreator
 import zio.*
 
-case class AddChessPieceFlowImpl(chessGameRepository: ChessGameRepository, pieceIdCreator: PieceIdCreator) extends AddChessPieceFlow {
+case class AddPieceFlowImpl(chessGameRepository: ChessGameRepository, pieceIdCreator: PieceIdCreator) extends AddPieceFlow {
   override def run(gameId: String, pieceType: ChessPieceType, newPieceCoordinate: PieceCoordinates): Task[Unit] =
     for
       chessGameDetails <- chessGameRepository.getChessGameDetails(gameId = gameId)
@@ -19,6 +19,6 @@ case class AddChessPieceFlowImpl(chessGameRepository: ChessGameRepository, piece
 
 }
 
-object AddChessPieceFlowImpl {
-  lazy val live = ZLayer.derive[AddChessPieceFlowImpl]
+object AddPieceFlowImpl {
+  lazy val live = ZLayer.derive[AddPieceFlowImpl]
 }

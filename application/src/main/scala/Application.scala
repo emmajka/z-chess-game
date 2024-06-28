@@ -1,5 +1,5 @@
 import cfg.{ConfigProvider, HttpConfig}
-import flow.impl.{AddChessPieceFlowImpl, GameInitializationFlowImpl, RetrieveGameDetailsFlowImpl}
+import flow.impl.{AddPieceFlowImpl, InitializeGameFlowImpl, RetrieveGameDetailsFlowImpl}
 import http.Http4sServer
 import http.handler.impl.{ChessGameAdminHandlerImpl, ChessGameHandlerImpl}
 import http.route.impl.{ChessGameAdminRouteImpl, ChessGameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
@@ -33,9 +33,9 @@ object Application extends ZIOAppDefault {
     ChessGameAdminHandlerImpl.live,
     ChessGameHandlerImpl.live,
     ChessGameRepositoryImpl.live,
-    GameInitializationFlowImpl.live,
+    InitializeGameFlowImpl.live,
     RetrieveGameDetailsFlowImpl.live,
-    AddChessPieceFlowImpl.live,
+    AddPieceFlowImpl.live,
     GameIdGeneratorImpl.live,
     PieceIdGeneratorImpl.live,
     GamePieceValidatorImpl.live,

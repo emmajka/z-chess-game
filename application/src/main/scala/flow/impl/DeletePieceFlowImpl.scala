@@ -1,11 +1,11 @@
 package flow.impl
 
 import exception.ChessGameException.ChessPieceDoesNotExists
-import flow.DeleteChessPieceFlow
+import flow.DeletePieceFlow
 import repository.ChessGameRepository
 import zio.*
 
-case class DeleteChessPieceFlowImpl(chessGameRepository: ChessGameRepository) extends DeleteChessPieceFlow {
+case class DeletePieceFlowImpl(chessGameRepository: ChessGameRepository) extends DeletePieceFlow {
   override def run(gameId: String, pieceId: Int): Task[Unit] =
     for
       deletedRows <- chessGameRepository.deleteChessPiece(gameId = gameId, pieceId = pieceId)
@@ -13,6 +13,6 @@ case class DeleteChessPieceFlowImpl(chessGameRepository: ChessGameRepository) ex
     yield ()
 }
 
-object DeleteChessPieceFlowImpl {
-  lazy val live = ZLayer.derive[DeleteChessPieceFlowImpl]
+object DeletePieceFlowImpl {
+  lazy val live = ZLayer.derive[DeletePieceFlowImpl]
 }
