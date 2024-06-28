@@ -13,7 +13,7 @@ trait ChessGameQueries[I <: Idiom] {
   inline given SchemaMeta[ChessGameTable] = ChessGameTable.schema
   inline given SchemaMeta[ChessGamePiecesTable] = ChessGamePiecesTable.schema
 
-  inline def getChessGameDetailsByGameIdQuery(gameId: String) =
+  inline def getChessGameDetailsQuery(gameId: String) =
     for chessGame <- query[ChessGameTable]
         .filter(cgt => cgt.gameId == lift(gameId))
     yield ChessGameDetails(id = chessGame.id, gameId = chessGame.gameId)
@@ -32,6 +32,10 @@ trait ChessGameQueries[I <: Idiom] {
         _.yCoordinate -> lift(yCoordinate),
         _.active -> true
       )
+  inline def chessGamePieceDeactivationUpdate(gameId: String, pieceId: Int) =
+    query[ChessGamePiecesTable]
+      .filter(cgpt => cgpt.gameId == lift(gameId) && cgpt.pieceId == lift(pieceId))
+      .update(_.active -> false)
 
   inline def getChessGamePiecesDetailsQuery(gameId: String) =
     for
@@ -39,7 +43,6 @@ trait ChessGameQueries[I <: Idiom] {
         .filter(cgt => cgt.gameId == lift(gameId))
       chessGamePiece <- query[ChessGamePiecesTable]
         .join(cgp => cgp.gameId == chessGame.gameId)
-        .filter(cgp => cgp.active)
     yield ChessGamePiecesDetails(
       pieceId = chessGamePiece.pieceId,
       pieceType = chessGamePiece.pieceType,

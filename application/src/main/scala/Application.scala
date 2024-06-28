@@ -1,7 +1,7 @@
 import cfg.{ConfigProvider, HttpConfig}
-import flow.impl.{GameInitializationFlowImpl, RetrieveGameDetailsFlowImpl}
+import flow.impl.{AddChessPieceFlowImpl, GameInitializationFlowImpl, RetrieveGameDetailsFlowImpl}
 import http.Http4sServer
-import http.handler.impl.ChessGameAdminHandlerImpl
+import http.handler.impl.{ChessGameAdminHandlerImpl, ChessGameHandlerImpl}
 import http.route.impl.{ChessGameAdminRouteImpl, ChessGameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
 import http.route.{ChessGameAdminRoute, ChessGameRoute, HealthRoute, HttpRoute}
 import mysql.{MysqlConnection, MysqlCtx}
@@ -18,7 +18,7 @@ object Application extends ZIOAppDefault {
 
     for _          <- ZIO.log("hello world")
     routes         <- getAllRoutes
-    httpServerPort <- ZIO.service[HttpConfig].map(_.port)
+    httpServerPort <- ZIO.serviceWith[HttpConfig](_.port)
     _              <- ZIO.logInfo(s"Setting up http server on port $httpServerPort...")
     f1             <- Http4sServer.run(routes = routes, httpServerPort).fork
     _              <- ZIO.logInfo("Http server up & running")
@@ -31,9 +31,11 @@ object Application extends ZIOAppDefault {
     ChessGameRouteImpl.live,
     ChessGameAdminRouteImpl.live,
     ChessGameAdminHandlerImpl.live,
+    ChessGameHandlerImpl.live,
     ChessGameRepositoryImpl.live,
     GameInitializationFlowImpl.live,
     RetrieveGameDetailsFlowImpl.live,
+    AddChessPieceFlowImpl.live,
     GameIdGeneratorImpl.live,
     PieceIdGeneratorImpl.live,
     GamePieceValidatorImpl.live,

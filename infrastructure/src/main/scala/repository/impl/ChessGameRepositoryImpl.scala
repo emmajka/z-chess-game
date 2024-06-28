@@ -20,7 +20,7 @@ case class ChessGameRepositoryImpl(context: MysqlCtx, datasource: DataSource)
   import mysql.serde.ChessPieceType.*
   override def getChessGameDetails(gameId: String): IO[Exception, ChessGameDetails] = {
     for
-      qr <- executeSelect(getChessGameDetailsByGameIdQuery(gameId = gameId))
+      qr <- executeSelect(getChessGameDetailsQuery(gameId = gameId))
       result <- if qr.isEmpty then ZIO.fail(ChessGameNotExists(gameId = gameId)) else ZIO.succeed(qr.head)
     yield result
   }
@@ -41,6 +41,11 @@ case class ChessGameRepositoryImpl(context: MysqlCtx, datasource: DataSource)
         yCoordinate = coordinates.y
       )
     )
+
+  override def deleteChessPiece(gameId: String, pieceId: Index): IO[Exception, Long] = executeUpdate(
+    chessGamePieceDeactivationUpdate(gameId = gameId, pieceId = pieceId)
+  )
+
 }
 
 object ChessGameRepositoryImpl {
