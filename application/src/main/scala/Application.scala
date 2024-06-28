@@ -1,5 +1,5 @@
 import cfg.{ConfigProvider, HttpConfig}
-import flow.impl.GameInitializationFlowImpl
+import flow.impl.{GameInitializationFlowImpl, RetrieveGameDetailsFlowImpl}
 import http.Http4sServer
 import http.handler.impl.ChessGameAdminHandlerImpl
 import http.route.impl.{ChessGameAdminRouteImpl, ChessGameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
@@ -32,6 +32,7 @@ object Application extends ZIOAppDefault {
     ChessGameAdminHandlerImpl.live,
     GameChessRepositoryImpl.live,
     GameInitializationFlowImpl.live,
+    RetrieveGameDetailsFlowImpl.live,
     GameIdGeneratorImpl.live,
     MysqlConnection.ctx,
     MysqlConnection.ds

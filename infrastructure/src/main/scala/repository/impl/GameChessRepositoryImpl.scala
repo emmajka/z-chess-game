@@ -3,7 +3,7 @@ package repository.impl
 import io.getquill.*
 import io.getquill.context.*
 import io.getquill.context.qzio.ImplicitSyntax.*
-import model.{ChessBoardType, ChessGameDetails}
+import model.ChessGameDetails
 import mysql.MysqlCtx
 import mysql.query.ChessGameQueries
 import mysql.schema.ChessGameTable
@@ -21,9 +21,9 @@ case class GameChessRepositoryImpl(context: MysqlCtx, datasource: DataSource)
   import context.*
   override def getChessGameDetails(gameId: String): IO[Exception, Seq[ChessGameDetails]] =
     executeSelect(getChessGameDetailsByGameIdQuery(gameId = gameId))
-
-  override def initGameOfChess(newGameId: String, chessBoardType: ChessBoardType): IO[Exception, Long] = {
-    executeInsert(newChessGameInsert(newGameId = newGameId, chessBoardType = chessBoardType))
+  
+  override def initGameOfChess(newGameId: String): IO[Exception, Long] = {
+    executeInsert(newChessGameInsert(newGameId = newGameId))
   }
 }
 

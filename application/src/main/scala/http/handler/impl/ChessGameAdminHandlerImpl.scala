@@ -1,21 +1,16 @@
 package http.handler.impl
 
-import flow.GameInitializationFlow
+import flow.{GameInitializationFlow, RetrieveGameDetailsFlow}
 import http.handler.ChessGameAdminHandler
-import repository.ChessGameRepository
 import zio.{Task, ZIO, ZLayer}
 
 case class ChessGameAdminHandlerImpl(
-  chessGameRepository: ChessGameRepository,
+  retrieveGameDetailsFlow: RetrieveGameDetailsFlow,
   gameInitializationFlow: GameInitializationFlow
 ) extends ChessGameAdminHandler {
   override def initGame: Task[Unit] = gameInitializationFlow.run()
-//    for gameId <- ZIO.logInfo("handling game initialization!") *> ZIO.unit
 
-  override def getGameDetails(gameId: String): Task[String] =
-    for _       <- ZIO.logInfo(s"retrieval of game details for game with ID $gameId")
-    gameDetails <- chessGameRepository.getChessGameDetails(gameId = gameId)
-    yield gameDetails.headOption.map(_.gameId).getOrElse("Game not found!!!")
+  override def getGameDetails(gameId: String): Task[String] = retrieveGameDetailsFlow.run(gameId)
 }
 
 object ChessGameAdminHandlerImpl {
