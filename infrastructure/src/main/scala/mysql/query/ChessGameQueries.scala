@@ -3,7 +3,7 @@ package mysql.query
 import io.getquill.*
 import io.getquill.context.*
 import io.getquill.idiom.*
-import model.{ChessGameDetails, ChessGamePiecesDetails}
+import model.{ChessGameDetails, ChessGamePiecesDetails, ChessPieceType}
 import mysql.schema.*
 
 trait ChessGameQueries[I <: Idiom] {
@@ -21,6 +21,17 @@ trait ChessGameQueries[I <: Idiom] {
   inline def chessGameInsert(newGameId: String) =
     query[ChessGameTable]
       .insert(_.gameId -> lift(newGameId))
+
+  inline def chessGamePieceInsert(gameId: String, pieceId: Int, pieceType: ChessPieceType, xCoordinate: Int, yCoordinate: Int) =
+    query[ChessGamePiecesTable]
+      .insert(
+        _.gameId -> lift(gameId),
+        _.pieceId -> lift(pieceId),
+        _.pieceType -> lift(pieceType),
+        _.xCoordinate -> lift(xCoordinate),
+        _.yCoordinate -> lift(yCoordinate),
+        _.active -> true
+      )
 
   inline def getChessGamePiecesDetailsQuery(gameId: String) =
     for

@@ -1,6 +1,7 @@
 package mysql.query
 
 import io.getquill.*
+import model.ChessPieceType
 import zio.*
 import zio.test.*
 
@@ -24,7 +25,17 @@ object ChessGameQueriesSpec extends ZIOSpecDefault {
       for
         mirror <- mirrorRepo.getChessGamePiecesDetails("someIdddd")
         sql = mirror.string
-      yield assertTrue(sql == "SELECT cgp.piece_id AS pieceId, cgp.piece_type AS pieceType, cgp.x_coordinate AS xCoordinate, cgp.y_coordinate AS yCoordinate FROM chess_game cgt INNER JOIN chess_game_pieces cgp ON cgp.game_id = cgt.game_id WHERE cgt.game_id = ? AND cgp.active")
+      yield assertTrue(
+        sql == "SELECT cgp.piece_id AS pieceId, cgp.piece_type AS pieceType, cgp.x_coordinate AS xCoordinate, cgp.y_coordinate AS yCoordinate FROM chess_game cgt INNER JOIN chess_game_pieces cgp ON cgp.game_id = cgt.game_id WHERE cgt.game_id = ? AND cgp.active"
+      )
+    }
+    test("chessGamePieceInsert SQL content test") {
+      for
+        mirror <- mirrorRepo.createChessGamePiece(gameId = "gameId", pieceId = 1, pieceType = ChessPieceType.Pawn, xCoordinate = 1, yCoordinate = 2)
+        sql = mirror.string
+      yield assertTrue(
+        sql == "INSERT INTO chess_game_pieces (game_id,piece_id,piece_type,x_coordinate,y_coordinate,active) VALUES (?, ?, ?, ?, ?, true)"
+      )
     }
   }
 }
