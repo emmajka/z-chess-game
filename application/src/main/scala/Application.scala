@@ -1,10 +1,12 @@
 import cfg.{ConfigProvider, HttpConfig}
+import flow.impl.GameInitializationFlowImpl
 import http.Http4sServer
 import http.handler.impl.ChessGameAdminHandlerImpl
 import http.route.impl.{ChessGameAdminRouteImpl, ChessGameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
 import http.route.{ChessGameAdminRoute, ChessGameRoute, HealthRoute, HttpRoute}
 import mysql.{MysqlConnection, MysqlCtx}
 import repository.impl.GameChessRepositoryImpl
+import service.impl.GameIdGeneratorImpl
 import zio.{Fiber, ZIO, ZIOAppArgs, ZIOAppDefault, ZLayer}
 
 object Application extends ZIOAppDefault {
@@ -29,6 +31,8 @@ object Application extends ZIOAppDefault {
     ChessGameAdminRouteImpl.live,
     ChessGameAdminHandlerImpl.live,
     GameChessRepositoryImpl.live,
+    GameInitializationFlowImpl.live,
+    GameIdGeneratorImpl.live,
     MysqlConnection.ctx,
     MysqlConnection.ds
   )

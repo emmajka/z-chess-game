@@ -48,8 +48,8 @@ object Dependencies {
   )
 
   lazy val mysql: Seq[ModuleID] = Seq(
-    "io.getquill" %% "quill-jdbc-zio"       % "4.8.4",
-//    "io.getquill" %% "quill-jdbc-zio"       % "4.6.0",
+//    "io.getquill" %% "quill-jdbc-zio"       % "4.8.4",
+    "io.getquill" %% "quill-jdbc-zio"       % "4.6.0",
     "mysql"        % "mysql-connector-java" % "8.0.33"
   )
   val application: Seq[ModuleID]    = zio ++ tapir ++ http4s ++ serde ++ configZio
