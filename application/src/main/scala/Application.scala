@@ -1,5 +1,5 @@
 import cfg.{ConfigProvider, HttpConfig}
-import flow.impl.{AddPieceFlowImpl, CreateNewGameFlowImpl, GetGameDetailsFlowImpl}
+import flow.impl.{AddPieceFlowImpl, CreateNewGameFlowImpl, DeletePieceFlowImpl, GetGameDetailsFlowImpl}
 import http.Http4sServer
 import http.handler.impl.GameHandlerImpl
 import http.route.impl.{GameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
@@ -34,6 +34,7 @@ object Application extends ZIOAppDefault {
     CreateNewGameFlowImpl.live,
     GetGameDetailsFlowImpl.live,
     AddPieceFlowImpl.live,
+    DeletePieceFlowImpl.live,
     GameIdGeneratorImpl.live,
     MysqlConnection.ctx,
     MysqlConnection.ds

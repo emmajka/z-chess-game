@@ -8,4 +8,5 @@ trait GameHandler {
   def createNewGame: Task[String]
   def getGameDetails(gameId: String): Task[GetGameDetailsResult]
   def addPiece(gameId: String, pieceType: PieceType, targetCoordinates: PieceCoordinates): Task[Int]
+  def deletePiece(gameId: String, pieceId: Int): Task[Unit]
 }

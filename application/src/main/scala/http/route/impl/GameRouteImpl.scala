@@ -45,7 +45,7 @@ case class GameRouteImpl(gameHandler: GameHandler) extends GameRoute {
 object GameRouteImpl {
   private val initGameEndpoint = endpoint
     .post
-    .in("init")
+    .in("game")
     .out(jsonBody[ApplicationHttpResponse[String]])
     .errorOut(ErrorResponse.errorBody)
     .description("Initialize a new game")
@@ -53,7 +53,7 @@ object GameRouteImpl {
 
   private val getGameDetailsEndpoint = endpoint
     .get
-    .in("init" / path[String]("gameId"))
+    .in("game" / path[String]("gameId"))
     .out(jsonBody[ApplicationHttpResponse[GetGameDetailsResponse]])
     .errorOut(ErrorResponse.errorBody)
     .description("Retrieve details for given game")
@@ -61,14 +61,16 @@ object GameRouteImpl {
 
   private val deletePieceEndpoint = endpoint
     .delete
-    .in("piece")
+    .in("game" / "piece")
+    .in(path[String]("gameId"))
+    .in(path[Int]("pieceId"))
     .errorOut(ErrorResponse.errorBody)
     .description("Delete a piece from a board for given game")
     .tag("game play operations")
 
   private val addPieceEndpoint = endpoint
     .post
-    .in("piece")
+    .in("game" / "piece")
     .in(jsonBody[AddPieceRequest])
     .errorOut(ErrorResponse.errorBody)
     .description("Place a new piece on a board for given game")
@@ -76,7 +78,7 @@ object GameRouteImpl {
 
   private val movePieceEndpoint = endpoint
     .put
-    .in("piece")
+    .in("game" / "piece")
     .errorOut(ErrorResponse.errorBody)
     .description("Move a piece on a board for given game")
     .tag("game play operations")
