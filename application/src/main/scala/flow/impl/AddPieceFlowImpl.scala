@@ -14,7 +14,7 @@ case class AddPieceFlowImpl(gameRepository: GameRepository) extends AddPieceFlow
       gamePieces <- gameRepository.getGamePiecesDetails(gameId = gameId)
       pieceWithSamePosition = gamePieces.find(gp => gp.xCoordinate == newPieceCoordinates.x && gp.yCoordinate == newPieceCoordinates.y && gp.active)
       _ <- ZIO.foreachDiscard(pieceWithSamePosition)(p => ZIO.fail(PiecePlaceTaken(gameId = gameId, pieceId = p.pieceId, pieceCoordinates = newPieceCoordinates)))
-      newPieceId = gamePieces.filter(_.pieceType == pieceType).maxByOption(_.pieceId).map(_.pieceId + 1).getOrElse(1)
+      newPieceId = gamePieces.maxByOption(_.pieceId).map(_.pieceId + 1).getOrElse(1)
       _ <- gameRepository.addNewGamePiece(gameId = gameId, pieceId = newPieceId, pieceType = pieceType, coordinates = newPieceCoordinates)
     yield newPieceId
 

@@ -31,7 +31,11 @@ case class GameRouteImpl(gameHandler: GameHandler) extends GameRoute {
           yield ApplicationHttpResponse(body = GetGameDetailsResponse(gameId = result.gameId, pieces = piecesDesc))
         }.catchAllCause(err => ZIO.logError(s"Failure! ${err.prettyPrint}") *> ZIO.fail(ErrorResponse(message = err.prettyPrint)))
     },
-    deletePieceEndpoint.zServerLogic(_ => ZIO.logInfo("DELETE a piece from the board!").unit),
+    deletePieceEndpoint.zServerLogic {
+      case (gameId, pieceId) => {
+        gameHandler.deletePiece(gameId = gameId, pieceId = pieceId)
+      }.catchAllCause(err => ZIO.logError(s"Failure! ${err.prettyPrint}") *> ZIO.fail(ErrorResponse(message = err.prettyPrint)))
+    },
     addPieceEndpoint.zServerLogic(
       req =>
         {
