@@ -11,7 +11,7 @@ case class GameQueriesMirror(context: SqlMirrorContext[MirrorSqlDialect, SnakeCa
   def getGameDetails(gameId: String): Task[context.QueryMirror[GameDetails]] =
     ZIO.attempt(run(getGameDetailsQuery(gameId = gameId)))
 
-  def createNewGame(newGameId: String): Task[context.ActionMirror] =
+  def createNewGame(newGameId: String): Task[context.ActionReturningMirror[String, String]] =
     ZIO.attempt(run(gameInsert(newGameId = newGameId)))
 
   import mysql.serde.PieceType.*

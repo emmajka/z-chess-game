@@ -21,6 +21,7 @@ trait GameQueries[I <: Idiom] {
   inline def gameInsert(newGameId: String) =
     query[GameTable]
       .insert(_.gameId -> lift(newGameId))
+      .returning(_.gameId)
 
   inline def gamePieceInsert(gameId: String, pieceId: Int, pieceType: PieceType, xCoordinate: Int, yCoordinate: Int) =
     query[GamePiecesTable]

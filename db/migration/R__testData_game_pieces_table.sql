@@ -1,1 +1,0 @@
-insert into game_pieces(game_id) values(1), (2), (3)

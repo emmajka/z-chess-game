@@ -26,7 +26,7 @@ object GameQueriesSpec extends ZIOSpecDefault {
         mirror <- mirrorRepo.getGamePiecesDetails("someIdddd")
         sql = mirror.string
       yield assertTrue(
-        sql == "SELECT cgp.piece_id AS pieceId, cgp.piece_type AS pieceType, cgp.x_coordinate AS xCoordinate, cgp.y_coordinate AS yCoordinate, cgp.active FROM game cgt INNER JOIN game_pieces cgp ON cgp.game_id = cgt.game_id WHERE cgt.game_id = ?"
+        sql == "SELECT gpt.piece_id AS pieceId, gpt.piece_type AS pieceType, gpt.x_coordinate AS xCoordinate, gpt.y_coordinate AS yCoordinate, gpt.active FROM game gt INNER JOIN game_pieces gpt ON gpt.game_id = gt.game_id WHERE gt.game_id = ?"
       )
     }
     test("gamePieceInsert SQL content test") {
@@ -42,7 +42,7 @@ object GameQueriesSpec extends ZIOSpecDefault {
         mirror <- mirrorRepo.deletePiece(gameId = "gameId", pieceId = 1)
         sql = mirror.string
       yield assertTrue(
-        sql == "UPDATE game_pieces AS cgpt SET active = false WHERE cgpt.game_id = ? AND cgpt.piece_id = ?"
+        sql == "UPDATE game_pieces AS gpt SET active = false WHERE gpt.game_id = ? AND gpt.piece_id = ?"
       )
     }
   }
