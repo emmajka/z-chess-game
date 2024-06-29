@@ -8,6 +8,6 @@ create TABLE game_pieces (
     `active` BOOLEAN NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(game_id) REFERENCES game(game_id),
-    CONSTRAINT uq_game_pieces_game_id_piece_id UNIQUE (game_id, piece_id),
+    CONSTRAINT uq_game_pieces_game_id_piece_id_piece_type_id UNIQUE (game_id, piece_id, piece_type_id),
     CONSTRAINT uq_game_pieces_piece_id_piece_type UNIQUE (piece_id, piece_type)
 )
