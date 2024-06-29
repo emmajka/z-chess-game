@@ -1,6 +1,6 @@
 package flow
 
-import model.{PieceType, PieceCoordinates}
+import model.{PieceCoordinates, PieceType}
 import zio.Task
 
 trait AddPieceFlow {

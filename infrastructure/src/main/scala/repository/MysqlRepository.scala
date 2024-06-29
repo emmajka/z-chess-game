@@ -12,7 +12,7 @@ trait MysqlRepository {
   import context.*
   implicit val ds: Implicit[DataSource] = Implicit(datasource)
 
-  inline final def executeSelect[T](inline select: Quoted[Query[T]]): IO[Exception, Seq[T]] = run(select).implicitly
+  inline final def executeSelect[T](inline select: Quoted[Query[T]]): IO[Exception, List[T]] = run(select).implicitly
 
   inline final def executeInsert[T](inline insert: Insert[T]): IO[Exception, Long] = run(insert).implicitly
 

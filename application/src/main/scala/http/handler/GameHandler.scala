@@ -1,10 +1,11 @@
 package http.handler
 
-import model.{PieceType, PieceCoordinates}
+import flow.impl.GetGameDetailsResult
+import model.{PieceCoordinates, PieceType}
 import zio.Task
 
 trait GameHandler {
-  def createNewGame: Task[Unit]
-  def getGameDetails(gameId: String): Task[String]
+  def createNewGame: Task[String]
+  def getGameDetails(gameId: String): Task[GetGameDetailsResult]
   def addPiece(gameId: String, pieceType: PieceType, pieceCoordinates: PieceCoordinates): Task[String]
 }

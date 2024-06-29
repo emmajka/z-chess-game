@@ -3,7 +3,7 @@ package mysql.schema
 import io.getquill.*
 
 case class GameTable(
-  id: Long,
+  id: Int,
   gameId: String
 )
 

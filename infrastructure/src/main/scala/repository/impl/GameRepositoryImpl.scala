@@ -1,7 +1,7 @@
 package repository.impl
 
 import io.getquill.*
-import model.{GameDetails, GamePiecesDetails, PieceType, PieceCoordinates}
+import model.{GameDetails, GamePiecesDetails, PieceCoordinates, PieceType}
 import mysql.MysqlCtx
 import mysql.query.GameQueries
 import repository.{GameRepository, MysqlRepository}
@@ -10,10 +10,7 @@ import zio.*
 import java.sql.SQLException
 import javax.sql.DataSource
 
-case class GameRepositoryImpl(context: MysqlCtx, datasource: DataSource)
-    extends GameRepository
-      with GameQueries[MySQLDialect]
-      with MysqlRepository {
+case class GameRepositoryImpl(context: MysqlCtx, datasource: DataSource) extends GameRepository with GameQueries[MySQLDialect] with MysqlRepository {
 
   import context.*
   import mysql.serde.PieceType.*
@@ -23,8 +20,11 @@ case class GameRepositoryImpl(context: MysqlCtx, datasource: DataSource)
   override def createNewGame(newGameId: String): IO[Exception, Long] =
     executeInsert(gameInsert(newGameId = newGameId))
 
-  override def getGamePiecesDetails(gameId: String): IO[Exception, Seq[GamePiecesDetails]] =
-    executeSelect(getGamePiecesDetailsQuery(gameId = gameId))
+  override def getGamePiecesDetails(gameId: String): IO[Exception, List[GamePiecesDetails]] =
+    for
+      r <- executeSelect(getGamePiecesDetailsQuery(gameId = gameId))
+      _ <- ZIO.logInfo(s"r: ${r.size}")
+    yield r
 
   override def addNewGamePiece(gameId: String, pieceId: Int, pieceType: PieceType, coordinates: PieceCoordinates): IO[Exception, Long] =
     executeInsert(

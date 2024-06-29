@@ -34,15 +34,15 @@ trait GameQueries[I <: Idiom] {
       )
   inline def gamePieceDeactivationUpdate(gameId: String, pieceId: Int) =
     query[GamePiecesTable]
-      .filter(cgpt => cgpt.gameId == lift(gameId) && cgpt.pieceId == lift(pieceId))
+      .filter(gpt => gpt.gameId == lift(gameId) && gpt.pieceId == lift(pieceId))
       .update(_.active -> false)
 
   inline def getGamePiecesDetailsQuery(gameId: String) =
     for
       game <- query[GameTable]
-        .filter(cgt => cgt.gameId == lift(gameId))
+        .filter(gt => gt.gameId == lift(gameId))
       gamePiece <- query[GamePiecesTable]
-        .join(cgp => cgp.gameId == game.gameId)
+        .join(gpt => gpt.gameId == game.gameId)
     yield GamePiecesDetails(
       pieceId = gamePiece.pieceId,
       pieceType = gamePiece.pieceType,
