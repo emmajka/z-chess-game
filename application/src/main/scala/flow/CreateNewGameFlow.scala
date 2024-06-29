@@ -2,6 +2,6 @@ package flow
 
 import zio.Task
 
-trait InitializeGameFlow {
+trait CreateNewGameFlow {
   def run(): Task[Unit]
 }

@@ -2,6 +2,6 @@ package flow
 
 import zio.Task
 
-trait RetrieveGameDetailsFlow {
+trait GetGameDetailsFlow {
   def run(gameId: String): Task[String]
 }

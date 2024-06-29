@@ -1,10 +1,10 @@
 package flow.impl
 
-import flow.RetrieveGameDetailsFlow
+import flow.GetGameDetailsFlow
 import repository.ChessGameRepository
 import zio.{Task, ZIO, ZLayer}
 
-case class RetrieveGameDetailsFlowImpl(chessGameRepository: ChessGameRepository) extends RetrieveGameDetailsFlow {
+case class GetGameDetailsFlowImpl(chessGameRepository: ChessGameRepository) extends GetGameDetailsFlow {
   override def run(gameId: String): Task[String] =
     for
       _ <- ZIO.logInfo(s"retrieval of game details for game with ID $gameId")
@@ -12,6 +12,6 @@ case class RetrieveGameDetailsFlowImpl(chessGameRepository: ChessGameRepository)
     yield "random for time being" // TODO error handling
 }
 
-object RetrieveGameDetailsFlowImpl {
-  lazy val live = ZLayer.derive[RetrieveGameDetailsFlowImpl]
+object GetGameDetailsFlowImpl {
+  lazy val live = ZLayer.derive[GetGameDetailsFlowImpl]
 }

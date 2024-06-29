@@ -1,9 +1,9 @@
 import cfg.{ConfigProvider, HttpConfig}
-import flow.impl.{AddPieceFlowImpl, InitializeGameFlowImpl, RetrieveGameDetailsFlowImpl}
+import flow.impl.{AddPieceFlowImpl, CreateNewGameFlowImpl, GetGameDetailsFlowImpl}
 import http.Http4sServer
-import http.handler.impl.{ChessGameAdminHandlerImpl, ChessGameHandlerImpl}
-import http.route.impl.{ChessGameAdminRouteImpl, ChessGameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
-import http.route.{ChessGameAdminRoute, ChessGameRoute, HealthRoute, HttpRoute}
+import http.handler.impl.ChessGameHandlerImpl
+import http.route.impl.{ChessGameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
+import http.route.{ChessGameRoute, HealthRoute, HttpRoute}
 import mysql.{MysqlConnection, MysqlCtx}
 import repository.impl.ChessGameRepositoryImpl
 import service.impl.{ChessGameServiceImpl, GameIdGeneratorImpl, PieceIdCreatorImpl, PieceIdGeneratorImpl}
@@ -16,26 +16,25 @@ object Application extends ZIOAppDefault {
 
   override def run: ZIO[ZIOAppArgs, Any, Any] = {
 
-    for _          <- ZIO.log("hello world")
-    routes         <- getAllRoutes
-    httpServerPort <- ZIO.serviceWith[HttpConfig](_.port)
-    _              <- ZIO.logInfo(s"Setting up http server on port $httpServerPort...")
-    f1             <- Http4sServer.run(routes = routes, httpServerPort).fork
-    _              <- ZIO.logInfo("Http server up & running")
-    _              <- Fiber.collectAll(List(f1)).join
+    for
+      _ <- ZIO.log("hello world")
+      routes <- getAllRoutes
+      httpServerPort <- ZIO.serviceWith[HttpConfig](_.port)
+      _ <- ZIO.logInfo(s"Setting up http server on port $httpServerPort...")
+      f1 <- Http4sServer.run(routes = routes, httpServerPort).fork
+      _ <- ZIO.logInfo("Http server up & running")
+      _ <- Fiber.collectAll(List(f1)).join
     yield ()
 
   }.provide(
     HttpConfig.live,
     HealthRouteImpl.live,
     ChessGameRouteImpl.live,
-    ChessGameAdminRouteImpl.live,
-    ChessGameAdminHandlerImpl.live,
     ChessGameHandlerImpl.live,
     ChessGameRepositoryImpl.live,
     ChessGameServiceImpl.live,
-    InitializeGameFlowImpl.live,
-    RetrieveGameDetailsFlowImpl.live,
+    CreateNewGameFlowImpl.live,
+    GetGameDetailsFlowImpl.live,
     AddPieceFlowImpl.live,
     GameIdGeneratorImpl.live,
     PieceIdGeneratorImpl.live,
@@ -46,11 +45,11 @@ object Application extends ZIOAppDefault {
   )
 
   private def getAllRoutes = {
-    for healthRoute <- ZIO.service[HealthRoute]
-    chessRoute      <- ZIO.service[ChessGameRoute]
-    chessAdminRoute <- ZIO.service[ChessGameAdminRoute]
-    appRoutes    = Seq(healthRoute, chessRoute, chessAdminRoute)
-    openApiRoute = OpenApiRouteImpl(appRoutes)
-    yield Seq(healthRoute, chessRoute, chessAdminRoute, openApiRoute)
+    for
+      healthRoute <- ZIO.service[HealthRoute]
+      chessRoute <- ZIO.service[ChessGameRoute]
+      appRoutes = Seq(healthRoute, chessRoute)
+      openApiRoute = OpenApiRouteImpl(appRoutes)
+    yield Seq(healthRoute, chessRoute, openApiRoute)
   }
 }

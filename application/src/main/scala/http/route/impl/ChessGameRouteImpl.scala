@@ -1,22 +1,52 @@
 package http.route.impl
 
 import http.handler.ChessGameHandler
-import http.model.ErrorResponse
+import http.model.{ApplicationHttpResponse, ErrorResponse, GetGameDetailsResponse}
 import http.route.ChessGameRoute
 import http.route.impl.ChessGameRouteImpl.*
 import sttp.tapir.ztapir.*
 import sttp.tapir.{PublicEndpoint, endpoint}
 import zio.*
+import sttp.tapir.json.zio.jsonBody
 
 case class ChessGameRouteImpl(chessGameHandler: ChessGameHandler) extends ChessGameRoute {
   override def routes: Seq[ZServerEndpoint[Any, Any]] = Seq(
-    deletePieceEndpoint.zServerLogic(_ => ZIO.logInfo("DELETE a chess piece from the board!") *> ZIO.unit),
-    addPieceEndpoint.zServerLogic(_ => ZIO.logInfo("Add a chess piece to the game!") *> ZIO.unit),
-    movePieceEndpoint.zServerLogic(_ => ZIO.logInfo("Move a chess piece on the board!") *> ZIO.unit)
+    initGameEndpoint.zServerLogic(_ =>
+      {
+        for result <- chessGameHandler.createNewGame
+          yield ()
+      }.catchAllCause(err =>
+        ZIO.logError(s"Failure! ${err.prettyPrint}") *> ZIO.fail(ErrorResponse(message = err.prettyPrint))
+      )
+    ),
+    getGameDetailsEndpoint.zServerLogic { gameId =>
+      {
+        for result <- chessGameHandler.getGameDetails(gameId)
+          yield ApplicationHttpResponse(body = GetGameDetailsResponse(gameId = result))
+      }.catchAllCause(err =>
+        ZIO.logError(s"Failure! ${err.prettyPrint}") *> ZIO.fail(ErrorResponse(message = err.prettyPrint))
+      )
+    },
+    deletePieceEndpoint.zServerLogic(_ => ZIO.logInfo("DELETE a chess piece from the board!").unit),
+    addPieceEndpoint.zServerLogic(_ => ZIO.logInfo("Add a chess piece to the game!").unit),
+    movePieceEndpoint.zServerLogic(_ => ZIO.logInfo("Move a chess piece on the board!").unit)
   )
 }
 
 object ChessGameRouteImpl {
+  private val initGameEndpoint = endpoint.post
+    .in("init")
+    .errorOut(ErrorResponse.errorBody)
+    .description("Initialize a new game")
+    .tag("chess game administration operations")
+
+  private val getGameDetailsEndpoint = endpoint.get
+    .in("init" / path[String]("gameId"))
+    .out(jsonBody[ApplicationHttpResponse[GetGameDetailsResponse]])
+    .errorOut(ErrorResponse.errorBody)
+    .description("Initialize a new game")
+    .tag("chess game administration operations")
+  
   val deletePieceEndpoint: PublicEndpoint[Unit, ErrorResponse, Unit, Any] = endpoint.delete
     .in("piece")
     .errorOut(ErrorResponse.errorBody)
