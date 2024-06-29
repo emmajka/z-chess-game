@@ -2,16 +2,16 @@ package mysql.schema
 
 import io.getquill.*
 
-case class ChessGameTable(
+case class GameTable(
   id: Long,
   gameId: String
 )
 
-object ChessGameTable {
+object GameTable {
   import mysql.MysqlCtx.*
 
-  val schema = schemaMeta[ChessGameTable](
-    "chess_game",
+  val schema = schemaMeta[GameTable](
+    "game",
     _.id          -> "id",
     _.gameId      -> "game_id"
   )

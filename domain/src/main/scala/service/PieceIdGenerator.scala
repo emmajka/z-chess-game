@@ -1,7 +1,7 @@
 package service
 
-import model.ChessGamePiecesDetails
+import model.GamePiecesDetails
 
 trait PieceIdGenerator {
-  def generate(pieces: Seq[ChessGamePiecesDetails]): Int
+  def generate(pieces: Seq[GamePiecesDetails]): Int
 }

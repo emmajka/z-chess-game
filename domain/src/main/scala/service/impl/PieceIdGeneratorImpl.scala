@@ -1,11 +1,11 @@
 package service.impl
 
-import model.ChessGamePiecesDetails
+import model.GamePiecesDetails
 import service.PieceIdGenerator
 import zio.ZLayer
 
 case class PieceIdGeneratorImpl() extends PieceIdGenerator {
-  override def generate(pieces: Seq[ChessGamePiecesDetails]): Int = pieces.maxByOption(_.pieceId).map(_.pieceId + 1).getOrElse(1)
+  override def generate(pieces: Seq[GamePiecesDetails]): Int = pieces.maxByOption(_.pieceId).map(_.pieceId + 1).getOrElse(1)
 }
 
 object PieceIdGeneratorImpl {

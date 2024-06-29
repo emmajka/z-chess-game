@@ -1,12 +1,12 @@
 import cfg.{ConfigProvider, HttpConfig}
 import flow.impl.{AddPieceFlowImpl, CreateNewGameFlowImpl, GetGameDetailsFlowImpl}
 import http.Http4sServer
-import http.handler.impl.ChessGameHandlerImpl
-import http.route.impl.{ChessGameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
-import http.route.{ChessGameRoute, HealthRoute, HttpRoute}
+import http.handler.impl.GameHandlerImpl
+import http.route.impl.{GameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
+import http.route.{GameRoute, HealthRoute, HttpRoute}
 import mysql.{MysqlConnection, MysqlCtx}
-import repository.impl.ChessGameRepositoryImpl
-import service.impl.{ChessGameServiceImpl, GameIdGeneratorImpl, PieceIdCreatorImpl, PieceIdGeneratorImpl}
+import repository.impl.GameRepositoryImpl
+import service.impl.{GameServiceImpl, GameIdGeneratorImpl, PieceIdCreatorImpl, PieceIdGeneratorImpl}
 import validator.impl.GamePieceValidatorImpl
 import zio.{Fiber, ZIO, ZIOAppArgs, ZIOAppDefault, ZLayer}
 
@@ -29,10 +29,10 @@ object Application extends ZIOAppDefault {
   }.provide(
     HttpConfig.live,
     HealthRouteImpl.live,
-    ChessGameRouteImpl.live,
-    ChessGameHandlerImpl.live,
-    ChessGameRepositoryImpl.live,
-    ChessGameServiceImpl.live,
+    GameRouteImpl.live,
+    GameHandlerImpl.live,
+    GameRepositoryImpl.live,
+    GameServiceImpl.live,
     CreateNewGameFlowImpl.live,
     GetGameDetailsFlowImpl.live,
     AddPieceFlowImpl.live,
@@ -47,9 +47,9 @@ object Application extends ZIOAppDefault {
   private def getAllRoutes = {
     for
       healthRoute <- ZIO.service[HealthRoute]
-      chessRoute <- ZIO.service[ChessGameRoute]
-      appRoutes = Seq(healthRoute, chessRoute)
+      gameRoute <- ZIO.service[GameRoute]
+      appRoutes = Seq(healthRoute, gameRoute)
       openApiRoute = OpenApiRouteImpl(appRoutes)
-    yield Seq(healthRoute, chessRoute, openApiRoute)
+    yield Seq(healthRoute, gameRoute, openApiRoute)
   }
 }

@@ -1,7 +1,7 @@
 package validator
 
-import model.{ChessGamePiecesDetails, PieceCoordinates}
+import model.{GamePiecesDetails, PieceCoordinates}
 
 trait GamePieceValidator {
-  def isGamePieceTaken(existingPiece: ChessGamePiecesDetails, newPieceCoordinates: PieceCoordinates): Boolean
+  def isGamePieceTaken(existingPiece: GamePiecesDetails, newPieceCoordinates: PieceCoordinates): Boolean
 }

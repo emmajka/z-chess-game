@@ -1,8 +1,8 @@
 package service
 
-import exception.ChessGameException
-import model.{ChessGamePiecesDetails, PieceCoordinates}
+import exception.GameException
+import model.{GamePiecesDetails, PieceCoordinates}
 
 trait PieceIdCreator {
-  def create(gameId: String, newPieceCoordinate: PieceCoordinates, chessGamePiecesDetails: Seq[ChessGamePiecesDetails]): Either[ChessGameException, Int]
+  def create(gameId: String, newPieceCoordinate: PieceCoordinates, gamePiecesDetails: Seq[GamePiecesDetails]): Either[GameException, Int]
 }
