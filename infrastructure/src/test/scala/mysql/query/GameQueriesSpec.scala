@@ -5,7 +5,7 @@ import model.PieceType
 import zio.*
 import zio.test.*
 
-object GameQueriesSpec$ extends ZIOSpecDefault {
+object GameQueriesSpec extends ZIOSpecDefault {
 
   val spec = suiteAll("GameQueries tests ") {
     val mirrorRepo = GameQueriesMirror(context = SqlMirrorContext(MirrorSqlDialect, SnakeCase))

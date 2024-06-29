@@ -52,9 +52,9 @@ object Dependencies {
     "io.getquill" %% "quill-jdbc-zio"       % "4.6.0",
     "mysql"        % "mysql-connector-java" % "8.0.33"
   )
-  val application: Seq[ModuleID]    = zio ++ tapir ++ http4s ++ serde ++ configZio
+  val application: Seq[ModuleID]    = zio ++ zioTest ++ tapir ++ http4s ++ serde ++ configZio
   val infrastructure: Seq[ModuleID] = zio ++ zioTest ++ configZio ++ mysql
-  val domain: Seq[ModuleID]         = zio
+  val domain: Seq[ModuleID]         = zio ++ zioTest
   val client: Seq[ModuleID]         = config ++ zio
 
 }
