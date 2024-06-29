@@ -32,16 +32,17 @@ case class GameRouteImpl(gameHandler: GameHandler) extends GameRoute {
         }.catchAllCause(err => ZIO.logError(s"Failure! ${err.prettyPrint}") *> ZIO.fail(ErrorResponse(message = err.prettyPrint)))
     },
     deletePieceEndpoint.zServerLogic {
-      case (gameId, pieceId) => {
-        gameHandler.deletePiece(gameId = gameId, pieceId = pieceId)
-      }.catchAllCause(err => ZIO.logError(s"Failure! ${err.prettyPrint}") *> ZIO.fail(ErrorResponse(message = err.prettyPrint)))
-    },
-    addPieceEndpoint.zServerLogic(
-      req =>
+      case (gameId, pieceId) =>
         {
-          for result <- gameHandler.addPiece(gameId = req.gameId, pieceType = req.pieceType, targetCoordinates = req.targetCoordinates) yield ()
+          gameHandler.deletePiece(gameId = gameId, pieceId = pieceId)
         }.catchAllCause(err => ZIO.logError(s"Failure! ${err.prettyPrint}") *> ZIO.fail(ErrorResponse(message = err.prettyPrint)))
-    ),
+    },
+    addPieceEndpoint.zServerLogic {
+      case (gameId: String, req: AddPieceRequest) =>
+        {
+          for result <- gameHandler.addPiece(gameId = gameId, pieceType = req.pieceType, targetCoordinates = req.targetCoordinates) yield ()
+        }.catchAllCause(err => ZIO.logError(s"Failure! ${err.prettyPrint}") *> ZIO.fail(ErrorResponse(message = err.prettyPrint)))
+    },
     movePieceEndpoint.zServerLogic(_ => ZIO.logInfo("Move a piece on the board!").unit)
   )
 }
@@ -75,6 +76,7 @@ object GameRouteImpl {
   private val addPieceEndpoint = endpoint
     .post
     .in("game" / "piece")
+    .in(path[String]("gameId"))
     .in(jsonBody[AddPieceRequest])
     .errorOut(ErrorResponse.errorBody)
     .description("Place a new piece on a board for given game")
@@ -83,6 +85,8 @@ object GameRouteImpl {
   private val movePieceEndpoint = endpoint
     .put
     .in("game" / "piece")
+    .in(path[String]("gameId"))
+    .in(path[Int]("pieceId"))
     .errorOut(ErrorResponse.errorBody)
     .description("Move a piece on a board for given game")
     .tag("game play operations")
