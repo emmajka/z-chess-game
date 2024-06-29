@@ -8,8 +8,7 @@ import zio.*
 case class CreateNewGameFlowImpl(idGenerator: GameIdGenerator, gameRepository: GameRepository) extends CreateNewGameFlow {
   override def run(): Task[String] =
     val gameId = idGenerator.generate
-    for returnedGameId <- gameRepository.createNewGame(gameId)
-    yield returnedGameId
+    gameRepository.createNewGame(gameId).as(gameId)
 }
 
 object CreateNewGameFlowImpl {
