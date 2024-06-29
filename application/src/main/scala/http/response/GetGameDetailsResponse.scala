@@ -1,4 +1,4 @@
-package http.model
+package http.response
 
 import sttp.tapir.Schema
 import zio.json.{DeriveJsonDecoder, DeriveJsonEncoder, JsonDecoder, JsonEncoder}

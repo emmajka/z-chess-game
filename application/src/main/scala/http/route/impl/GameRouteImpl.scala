@@ -1,12 +1,13 @@
 package http.route.impl
 
 import http.handler.GameHandler
-import http.model.{ApplicationHttpResponse, ErrorResponse, GetGameDetailsResponse}
+import http.request.AddPieceRequest
+import http.response.{ApplicationHttpResponse, ErrorResponse, GetGameDetailsResponse}
 import http.route.GameRoute
 import http.route.impl.GameRouteImpl.*
+import sttp.tapir.endpoint
 import sttp.tapir.json.zio.jsonBody
 import sttp.tapir.ztapir.*
-import sttp.tapir.{endpoint, PublicEndpoint}
 import zio.*
 
 case class GameRouteImpl(gameHandler: GameHandler) extends GameRoute {
@@ -31,7 +32,12 @@ case class GameRouteImpl(gameHandler: GameHandler) extends GameRoute {
         }.catchAllCause(err => ZIO.logError(s"Failure! ${err.prettyPrint}") *> ZIO.fail(ErrorResponse(message = err.prettyPrint)))
     },
     deletePieceEndpoint.zServerLogic(_ => ZIO.logInfo("DELETE a piece from the board!").unit),
-    addPieceEndpoint.zServerLogic(_ => ZIO.logInfo("Add a piece to the game!").unit),
+    addPieceEndpoint.zServerLogic(
+      req =>
+        {
+          for result <- gameHandler.addPiece(gameId = req.gameId, pieceType = req.pieceType, targetCoordinates = req.targetCoordinates) yield ()
+        }.catchAllCause(err => ZIO.logError(s"Failure! ${err.prettyPrint}") *> ZIO.fail(ErrorResponse(message = err.prettyPrint)))
+    ),
     movePieceEndpoint.zServerLogic(_ => ZIO.logInfo("Move a piece on the board!").unit)
   )
 }
@@ -53,21 +59,22 @@ object GameRouteImpl {
     .description("Retrieve details for given game")
     .tag("game play operations")
 
-  val deletePieceEndpoint: PublicEndpoint[Unit, ErrorResponse, Unit, Any] = endpoint
+  private val deletePieceEndpoint = endpoint
     .delete
     .in("piece")
     .errorOut(ErrorResponse.errorBody)
     .description("Delete a piece from a board for given game")
     .tag("game play operations")
 
-  val addPieceEndpoint: PublicEndpoint[Unit, ErrorResponse, Unit, Any] = endpoint
+  private val addPieceEndpoint = endpoint
     .post
     .in("piece")
+    .in(jsonBody[AddPieceRequest])
     .errorOut(ErrorResponse.errorBody)
     .description("Place a new piece on a board for given game")
     .tag("game play operations")
 
-  val movePieceEndpoint: PublicEndpoint[Unit, ErrorResponse, Unit, Any] = endpoint
+  private val movePieceEndpoint = endpoint
     .put
     .in("piece")
     .errorOut(ErrorResponse.errorBody)

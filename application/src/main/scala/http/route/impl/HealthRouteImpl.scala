@@ -1,6 +1,6 @@
 package http.route.impl
 
-import http.model.ErrorResponse
+import http.response.ErrorResponse
 import http.route.HealthRoute
 import http.route.impl.HealthRouteImpl.healthEndpoint
 import sttp.tapir.ztapir.*

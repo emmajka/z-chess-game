@@ -1,4 +1,4 @@
-package http.model
+package http.response
 
 import sttp.tapir.json.zio.jsonBody
 import sttp.tapir.{EndpointIO, Schema, json}
