@@ -3,7 +3,7 @@ package mysql.query
 import io.getquill.*
 import io.getquill.context.*
 import io.getquill.idiom.*
-import model.{GameDetails, GamePiecesDetails, PieceType}
+import model.{GameDetails, GamePiecesDetails, PieceType, Position}
 import mysql.schema.*
 
 trait GameQueries[I <: Idiom] {
@@ -37,6 +37,11 @@ trait GameQueries[I <: Idiom] {
     query[GamePiecesTable]
       .filter(gpt => gpt.gameId == lift(gameId) && gpt.pieceId == lift(pieceId))
       .update(_.active -> false)
+  
+  inline def gamePiecePositionUpdate(gameId: String, pieceId: Int, x: Int, y:Int) =
+    query[GamePiecesTable]
+      .filter(gpt => gpt.gameId == lift(gameId) && gpt.pieceId == lift(pieceId))
+      .update(_.xCoordinate -> lift(x), _.yCoordinate -> lift(y))
 
   inline def getGamePiecesDetailsQuery(gameId: String) =
     for

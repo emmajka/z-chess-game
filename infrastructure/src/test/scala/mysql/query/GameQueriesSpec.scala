@@ -1,7 +1,7 @@
 package mysql.query
 
 import io.getquill.*
-import model.PieceType
+import model.{PieceType, Position}
 import zio.*
 import zio.test.*
 
@@ -44,6 +44,12 @@ object GameQueriesSpec extends ZIOSpecDefault {
       yield assertTrue(
         sql == "UPDATE game_pieces AS gpt SET active = false WHERE gpt.game_id = ? AND gpt.piece_id = ?"
       )
+    }
+    test("gamePiecePositionUpdate SQL content test") {
+      for
+        mirror <- mirrorRepo.updatePiecePosition(gameId = "gameId", pieceId = 1, x = 1, y = 2)
+        sql = mirror.string
+      yield assertTrue(sql == "UPDATE game_pieces AS gpt SET x_coordinate = ?, y_coordinate = ? WHERE gpt.game_id = ? AND gpt.piece_id = ?")
     }
   }
 }

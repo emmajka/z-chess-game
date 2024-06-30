@@ -1,7 +1,7 @@
 package mysql.query
 
 import io.getquill.*
-import model.{GameDetails, GamePiecesDetails, PieceType}
+import model.{GameDetails, GamePiecesDetails, PieceType, Position}
 import mysql.schema.*
 import mysql.serde.PieceType.*
 import zio.*
@@ -39,5 +39,8 @@ case class GameQueriesMirror(context: SqlMirrorContext[MirrorSqlDialect, SnakeCa
 
   def deletePiece(gameId: String, pieceId: Int): Task[context.ActionMirror] =
     ZIO.attempt(run(gamePieceDeactivationUpdate(gameId = gameId, pieceId = pieceId)))
+
+  def updatePiecePosition(gameId: String, pieceId: Int, x: Int, y: Int): Task[context.ActionMirror] =
+    ZIO.attempt(run(gamePiecePositionUpdate(gameId = gameId, pieceId = pieceId, x = x, y = y)))
 
 }

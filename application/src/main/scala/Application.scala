@@ -1,5 +1,5 @@
 import cfg.{ConfigProvider, HttpConfig}
-import flow.impl.{AddPieceFlowImpl, CreateNewGameFlowImpl, DeletePieceFlowImpl, GetGameDetailsFlowImpl}
+import flow.impl.*
 import http.Http4sServer
 import http.handler.impl.GameHandlerImpl
 import http.route.impl.{GameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
@@ -7,6 +7,7 @@ import http.route.{GameRoute, HealthRoute, HttpRoute}
 import mysql.{MysqlConnection, MysqlCtx}
 import repository.impl.GameRepositoryImpl
 import service.impl.GameIdGeneratorImpl
+import validator.impl.{PawnMoveValidatorImpl, PieceMoveValidatorImpl}
 import zio.{Fiber, ZIO, ZIOAppArgs, ZIOAppDefault, ZLayer}
 
 object Application extends ZIOAppDefault {
@@ -35,6 +36,9 @@ object Application extends ZIOAppDefault {
     GetGameDetailsFlowImpl.live,
     AddPieceFlowImpl.live,
     DeletePieceFlowImpl.live,
+    MovePieceFlowImpl.live,
+    PieceMoveValidatorImpl.live,
+    PawnMoveValidatorImpl.live,
     GameIdGeneratorImpl.live,
     MysqlConnection.ctx,
     MysqlConnection.ds

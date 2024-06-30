@@ -8,4 +8,5 @@ trait GameRepository {
   def getGamePiecesDetails(gameId: String): IO[Exception, List[GamePiecesDetails]]
   def addNewGamePiece(gameId: String, pieceId: Int, pieceType: PieceType, coordinates: Position): IO[Throwable, Long]
   def deleteGamePiece(gameId: String, pieceId: Int): IO[Throwable, Long]
+  def updatePiecePosition(gameId: String, pieceId: Int, position: Position): IO[Throwable, Long]
 }
