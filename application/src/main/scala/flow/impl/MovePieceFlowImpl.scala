@@ -10,8 +10,7 @@ import zio.{Task, ZIO, ZLayer}
 case class MovePieceFlowImpl(gameRepository: GameRepository, pieceMoveValidator: PieceMoveValidator) extends MovePieceFlow {
   override def run(gameId: String, pieceId: Int, pieceType: PieceType, pieceMoveToCoordinates: PieceCoordinates): Task[Unit] =
     for
-      gameDetails <- gameRepository.getGameDetails(gameId)
-      _ <- ZIO.fail(GameNotExists(gameId = gameId)).when(gameDetails.isEmpty)
+      gameDetails <- gameRepository.getGameDetails(gameId).filterOrFail(_.nonEmpty)(GameNotExists(gameId = gameId))
       allActivePieces <- gameRepository.getGamePiecesDetails(gameId = gameId).map(_.filter(_.active))
       currentPieceDetails <- ZIO
         .fromOption(allActivePieces.find(p => p.pieceId == pieceId))

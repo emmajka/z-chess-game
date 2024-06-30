@@ -9,8 +9,7 @@ import zio.*
 case class AddPieceFlowImpl(gameRepository: GameRepository) extends AddPieceFlow {
   override def run(gameId: String, pieceType: PieceType, newPieceCoordinates: PieceCoordinates): Task[Int] =
     for
-      gameDetails <- gameRepository.getGameDetails(gameId = gameId)
-      _ <- ZIO.fail(GameNotExists(gameId = gameId)).when(gameDetails.isEmpty)
+      gameDetails <- gameRepository.getGameDetails(gameId = gameId).filterOrFail(_.nonEmpty)(GameNotExists(gameId = gameId))
       gamePieces <- gameRepository.getGamePiecesDetails(gameId = gameId)
       pieceWithSamePosition = gamePieces.find(gp => gp.xCoordinate == newPieceCoordinates.x && gp.yCoordinate == newPieceCoordinates.y && gp.active)
       _ <- ZIO.foreachDiscard(pieceWithSamePosition)(p => ZIO.fail(PiecePlaceTaken(gameId = gameId, pieceId = p.pieceId, pieceCoordinates = newPieceCoordinates)))
