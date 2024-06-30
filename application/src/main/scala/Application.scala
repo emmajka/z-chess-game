@@ -7,7 +7,8 @@ import http.route.{GameRoute, HealthRoute, HttpRoute}
 import mysql.{MysqlConnection, MysqlCtx}
 import repository.impl.GameRepositoryImpl
 import service.impl.GameIdGeneratorImpl
-import validator.impl.{PawnMoveValidatorImpl, PieceMoveValidatorImpl}
+import validator.BishopMoveValidator
+import validator.impl.{BishopMoveValidatorImpl, PawnMoveValidatorImpl, PieceMoveValidatorImpl}
 import zio.{Fiber, ZIO, ZIOAppArgs, ZIOAppDefault, ZLayer}
 
 object Application extends ZIOAppDefault {
@@ -39,6 +40,7 @@ object Application extends ZIOAppDefault {
     MovePieceFlowImpl.live,
     PieceMoveValidatorImpl.live,
     PawnMoveValidatorImpl.live,
+    BishopMoveValidatorImpl.live,
     GameIdGeneratorImpl.live,
     MysqlConnection.ctx,
     MysqlConnection.ds
