@@ -1,8 +1,8 @@
 package validator
 
 import exception.GameException
-import model.{PieceCoordinates, PieceType}
+import model.{Position, PieceType}
 
 trait PieceMoveValidator {
-  def validate(pieceType: PieceType, from: PieceCoordinates, to: PieceCoordinates, existing: PieceCoordinates): Either[GameException, Unit]
+  def validate(pieceType: PieceType, from: Position, to: Position, existing: Position): Either[GameException, Unit]
 }

@@ -1,6 +1,6 @@
 package validator.impl
 
-import model.PieceCoordinates
+import model.Position
 import zio.*
 import zio.test.*
 
@@ -9,13 +9,13 @@ object PawnMoveDirectionValidatorImplSpec extends ZIOSpecDefault {
 
   val spec = suiteAll("PawnMoveDirectionValidator tests") {
     val testData = Seq(
-      ((PieceCoordinates(1, 1), PieceCoordinates(1, 2)), true),
-      ((PieceCoordinates(2, 1), PieceCoordinates(1, 1)), true),
-      ((PieceCoordinates(3, 6), PieceCoordinates(6, 6)), true),
-      ((PieceCoordinates(5, 2), PieceCoordinates(5, 4)), true),
-      ((PieceCoordinates(5, 2), PieceCoordinates(3, 4)), false),
-      ((PieceCoordinates(1, 2), PieceCoordinates(3, 4)), false),
-      ((PieceCoordinates(1, 1), PieceCoordinates(2, 2)), false)
+      ((Position(1, 1), Position(1, 2)), true),
+      ((Position(2, 1), Position(1, 1)), true),
+      ((Position(3, 6), Position(6, 6)), true),
+      ((Position(5, 2), Position(5, 4)), true),
+      ((Position(5, 2), Position(3, 4)), false),
+      ((Position(1, 2), Position(3, 4)), false),
+      ((Position(1, 1), Position(2, 2)), false)
     )
 
     test("when pawn's movement is in straight line then it should return true") {

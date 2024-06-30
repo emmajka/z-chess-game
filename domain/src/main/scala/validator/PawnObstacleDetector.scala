@@ -1,7 +1,7 @@
 package validator
 
-import model.PieceCoordinates
+import model.Position
 
 trait PawnObstacleDetector {
-  def detect(from: PieceCoordinates, to: PieceCoordinates, existing: PieceCoordinates): Boolean
+  def detect(from: Position, to: Position, existing: Position): Boolean
 }

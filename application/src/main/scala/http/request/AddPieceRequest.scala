@@ -1,12 +1,12 @@
 package http.request
 
-import model.{PieceCoordinates, PieceType}
+import model.{Position, PieceType}
 import sttp.tapir.Schema
 
-case class AddPieceRequest(pieceType: PieceType, targetCoordinates: PieceCoordinates)
+case class AddPieceRequest(pieceType: PieceType, targetCoordinates: Position)
 
 object AddPieceRequest {
-  import http.serde.PieceCoordinates.given
+  import http.serde.Position.given
   import http.serde.PieceType.given
   import zio.json.{DeriveJsonDecoder, DeriveJsonEncoder, JsonDecoder, JsonEncoder}
 

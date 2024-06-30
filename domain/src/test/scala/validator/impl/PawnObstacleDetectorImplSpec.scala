@@ -1,6 +1,6 @@
 package validator.impl
 
-import model.PieceCoordinates
+import model.Position
 import zio.test.*
 
 object PawnObstacleDetectorImplSpec extends ZIOSpecDefault {
@@ -8,10 +8,10 @@ object PawnObstacleDetectorImplSpec extends ZIOSpecDefault {
 
   val spec = suiteAll("PawnObstacleDetectorImpl tests") {
     val testData = Seq(
-      ((PieceCoordinates(1, 1), PieceCoordinates(1, 3), PieceCoordinates(4, 4)), false),
-      ((PieceCoordinates(1, 1), PieceCoordinates(1, 3), PieceCoordinates(1, 2)), true),
-      ((PieceCoordinates(6, 6), PieceCoordinates(6, 1), PieceCoordinates(6, 2)), true),
-      ((PieceCoordinates(6, 6), PieceCoordinates(6, 1), PieceCoordinates(2, 7)), false),
+      ((Position(1, 1), Position(1, 3), Position(4, 4)), false),
+      ((Position(1, 1), Position(1, 3), Position(1, 2)), true),
+      ((Position(6, 6), Position(6, 1), Position(6, 2)), true),
+      ((Position(6, 6), Position(6, 1), Position(2, 7)), false),
     )
     test("when no obstacle is detected in a straight line movement then it should return false") {
       assertTrue {

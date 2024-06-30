@@ -2,7 +2,7 @@ package repository.impl
 
 import io.getquill.*
 import io.getquill.context.qzio.ImplicitSyntax.*
-import model.{GameDetails, GamePiecesDetails, PieceCoordinates, PieceType}
+import model.{GameDetails, GamePiecesDetails, Position, PieceType}
 import mysql.MysqlCtx
 import mysql.query.GameQueries
 import repository.{GameRepository, MysqlRepository}
@@ -24,7 +24,7 @@ case class GameRepositoryImpl(context: MysqlCtx, datasource: DataSource) extends
   override def getGamePiecesDetails(gameId: String): IO[Exception, List[GamePiecesDetails]] =
     run(getGamePiecesDetailsQuery(gameId = gameId)).implicitly
 
-  override def addNewGamePiece(gameId: String, pieceId: Int, pieceType: PieceType, coordinates: PieceCoordinates): IO[Throwable, Long] =
+  override def addNewGamePiece(gameId: String, pieceId: Int, pieceType: PieceType, coordinates: Position): IO[Throwable, Long] =
     transaction(
       run(
         gamePieceInsert(

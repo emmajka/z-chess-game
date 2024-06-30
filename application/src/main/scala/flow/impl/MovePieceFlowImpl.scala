@@ -2,13 +2,13 @@ package flow.impl
 
 import exception.GameException.{GameNotExists, PieceNotExists}
 import flow.MovePieceFlow
-import model.{PieceCoordinates, PieceType}
+import model.{Position, PieceType}
 import repository.GameRepository
 import validator.PieceMoveValidator
 import zio.{Task, ZIO, ZLayer}
 
 case class MovePieceFlowImpl(gameRepository: GameRepository, pieceMoveValidator: PieceMoveValidator) extends MovePieceFlow {
-  override def run(gameId: String, pieceId: Int, pieceType: PieceType, pieceMoveToCoordinates: PieceCoordinates): Task[Unit] =
+  override def run(gameId: String, pieceId: Int, pieceType: PieceType, pieceMoveToCoordinates: Position): Task[Unit] =
     for
       gameDetails <- gameRepository.getGameDetails(gameId).filterOrFail(_.nonEmpty)(GameNotExists(gameId = gameId))
       allActivePieces <- gameRepository.getGamePiecesDetails(gameId = gameId).map(_.filter(_.active))
@@ -22,7 +22,7 @@ case class MovePieceFlowImpl(gameRepository: GameRepository, pieceMoveValidator:
               currentPieceDetails.pieceType,
               pieceMoveToCoordinates /* FIXME incorrect coordinates, extract from DB!*/,
               pieceMoveToCoordinates,
-              PieceCoordinates(existing.xCoordinate, existing.yCoordinate)
+              Position(existing.xCoordinate, existing.yCoordinate)
             )
           }
       )

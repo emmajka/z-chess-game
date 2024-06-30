@@ -1,7 +1,7 @@
 package validator
 
-import model.PieceCoordinates
+import model.Position
 
 trait PawnMoveDirectionValidator {
-  def validate(from: PieceCoordinates, to: PieceCoordinates): Boolean
+  def validate(from: Position, to: Position): Boolean
 }

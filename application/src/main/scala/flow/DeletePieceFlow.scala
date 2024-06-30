@@ -1,6 +1,6 @@
 package flow
 
-import model.{PieceType, PieceCoordinates}
+import model.{PieceType, Position}
 import zio.Task
 
 trait DeletePieceFlow {

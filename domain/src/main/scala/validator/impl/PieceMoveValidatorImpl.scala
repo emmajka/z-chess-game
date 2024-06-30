@@ -2,12 +2,12 @@ package validator.impl
 
 import exception.GameException
 import exception.GameException.{ObstacleDuringMove, PawnNotStraightMove}
-import model.{PieceCoordinates, PieceType}
+import model.{Position, PieceType}
 import validator.{PawnMoveDirectionValidator, PawnObstacleDetector, PieceMoveValidator}
 
 case class PieceMoveValidatorImpl(pawnMoveDirectionValidator: PawnMoveDirectionValidator, pawnObstacleDetector: PawnObstacleDetector)
     extends PieceMoveValidator {
-  override def validate(pieceType: PieceType, from: PieceCoordinates, to: PieceCoordinates, existing: PieceCoordinates): Either[GameException, Unit] = {
+  override def validate(pieceType: PieceType, from: Position, to: Position, existing: Position): Either[GameException, Unit] = {
     pieceType match
       case PieceType.Pawn => {
         for

@@ -2,12 +2,12 @@ package flow.impl
 
 import exception.GameException.{GameNotExists, PiecePlaceTaken}
 import flow.AddPieceFlow
-import model.{PieceCoordinates, PieceType}
+import model.{Position, PieceType}
 import repository.GameRepository
 import zio.*
 
 case class AddPieceFlowImpl(gameRepository: GameRepository) extends AddPieceFlow {
-  override def run(gameId: String, pieceType: PieceType, newPieceCoordinates: PieceCoordinates): Task[Int] =
+  override def run(gameId: String, pieceType: PieceType, newPieceCoordinates: Position): Task[Int] =
     for
       gameDetails <- gameRepository.getGameDetails(gameId = gameId).filterOrFail(_.nonEmpty)(GameNotExists(gameId = gameId))
       gamePieces <- gameRepository.getGamePiecesDetails(gameId = gameId)

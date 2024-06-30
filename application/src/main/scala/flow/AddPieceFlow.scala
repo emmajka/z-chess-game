@@ -1,8 +1,8 @@
 package flow
 
-import model.{PieceCoordinates, PieceType}
+import model.{Position, PieceType}
 import zio.Task
 
 trait AddPieceFlow {
-  def run(gameId: String, pieceType: PieceType, pieceCoordinates: PieceCoordinates): Task[Int]
+  def run(gameId: String, pieceType: PieceType, pieceCoordinates: Position): Task[Int]
 }
