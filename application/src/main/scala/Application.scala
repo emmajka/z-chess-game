@@ -1,7 +1,6 @@
 import cfg.{ConfigProvider, HttpConfig}
 import flow.impl.*
 import http.Http4sServer
-import http.handler.impl.GameHandlerImpl
 import http.route.impl.{GameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
 import http.route.{GameRoute, HealthRoute, HttpRoute}
 import mysql.{MysqlConnection, MysqlCtx}
@@ -31,7 +30,6 @@ object Application extends ZIOAppDefault {
     HttpConfig.live,
     HealthRouteImpl.live,
     GameRouteImpl.live,
-    GameHandlerImpl.live,
     GameRepositoryImpl.live,
     CreateNewGameFlowImpl.live,
     GetGameDetailsFlowImpl.live,
