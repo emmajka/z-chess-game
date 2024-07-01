@@ -2,7 +2,7 @@ package exception
 
 import model.Position
 
-enum GameException(msg: String) extends Exception {
+enum GameException(val msg: String) extends Exception {
   case GameNotExists(gameId: String) extends GameException(s"Game with ID [$gameId] does not exists")
   case PieceNotExists(gameId: String, pieceId: Int) extends GameException(s"Game with ID [$gameId] does not have an active piece with ID [$pieceId]")
   case PiecePlaceTaken(gameId: String, pieceId: Int, pieceCoordinates: Position)
