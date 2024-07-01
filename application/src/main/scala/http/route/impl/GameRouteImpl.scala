@@ -1,6 +1,6 @@
 package http.route.impl
 
-import flow.*
+import http.handler.GameHandler
 import http.request.{AddPieceRequest, MovePieceRequest}
 import http.response.{ApplicationHttpResponse, ErrorResponse, GetGameDetailsResponse}
 import http.route.impl.GameRouteImpl.*
@@ -10,17 +10,11 @@ import sttp.tapir.json.zio.jsonBody
 import sttp.tapir.ztapir.*
 import zio.*
 
-case class GameRouteImpl(
-  addPieceFlow: AddPieceFlow,
-  createNewGameFlow: CreateNewGameFlow,
-  getGameDetailsFlow: GetGameDetailsFlow,
-  deletePieceFlow: DeletePieceFlow,
-  movePieceFlow: MovePieceFlow)
-    extends GameRoute {
+case class GameRouteImpl(gameHandler: GameHandler) extends GameRoute {
   override def routes: Seq[ZServerEndpoint[Any, Any]] = Seq(
     initGameEndpoint.zServerLogic(
       _ => {
-        for result <- createNewGameFlow.run()
+        for result <- gameHandler.createNewGame
         yield ApplicationHttpResponse(body = result)
       }
     ),
@@ -28,7 +22,7 @@ case class GameRouteImpl(
       gameId =>
         {
           for
-            result <- getGameDetailsFlow.run(gameId)
+            result <- gameHandler.getGameDetails(gameId)
             piecesDesc = result
               .pieces
               .filter(_.active)
@@ -38,18 +32,18 @@ case class GameRouteImpl(
     },
     deletePieceEndpoint.zServerLogic {
       case (gameId: String, pieceId: Int) =>
-        for _ <- deletePieceFlow.run(gameId = gameId, pieceId = pieceId)
+        for _ <- gameHandler.deletePiece(gameId = gameId, pieceId = pieceId)
         yield ApplicationHttpResponse(body = s"Successfully deletes piece with ID [$pieceId] from game with ID [$gameId]")
     },
     addPieceEndpoint.zServerLogic {
       case (gameId: String, req: AddPieceRequest) =>
-        for result <- addPieceFlow.run(gameId = gameId, pieceType = req.pieceType, targetPosition = req.targetPosition)
+        for result <- gameHandler.addPiece(gameId = gameId, pieceType = req.pieceType, targetPosition = req.targetPosition)
         yield ApplicationHttpResponse(body = s"Successfully added new piece to game with ID [$gameId], new piece's ID is $result")
     },
     movePieceEndpoint.zServerLogic {
       case (gameId: String, pieceId: Int, req: MovePieceRequest) =>
-        for _ <- movePieceFlow.run(gameId = gameId, pieceId = pieceId, targetPosition = req.targetPosition)
-        yield ApplicationHttpResponse(body = s"Successfully moved a piece]")
+        for _ <- gameHandler.movePiece(gameId = gameId, pieceId = pieceId, targetPosition = req.targetPosition)
+        yield ApplicationHttpResponse(body = s"Successfully moved a poiece")
     }
   )
 }
