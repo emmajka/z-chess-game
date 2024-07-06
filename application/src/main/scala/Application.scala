@@ -1,9 +1,10 @@
-import cfg.{ConfigProvider, HttpConfig}
+import cfg.{ConfigProvider, HttpConfig, KafkaConfig}
 import flow.impl.*
 import http.Http4sServer
 import http.handler.impl.GameHandlerImpl
 import http.route.impl.{GameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
 import http.route.{GameRoute, HealthRoute, HttpRoute}
+import kafka.producer.impl.EventsProducerImpl
 import mysql.{MysqlConnection, MysqlCtx}
 import repository.impl.GameRepositoryImpl
 import service.impl.GameIdGeneratorImpl
@@ -43,7 +44,9 @@ object Application extends ZIOAppDefault {
     BishopMoveValidatorImpl.live,
     GameIdGeneratorImpl.live,
     MysqlConnection.ctx,
-    MysqlConnection.ds
+    MysqlConnection.ds,
+    EventsProducerImpl.live,
+    KafkaConfig.live
   )
 
   private def getAllRoutes = {

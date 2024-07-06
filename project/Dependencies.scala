@@ -16,7 +16,6 @@ object Dependencies {
 
   lazy val zio: Seq[ModuleID] = Seq(
     "dev.zio" %% "zio"       % "2.0.21",
-    "dev.zio" %% "zio-kafka" % "2.7.4"
   )
 
   lazy val zioTest: Seq[ModuleID] = Seq(
@@ -26,6 +25,10 @@ object Dependencies {
 
   lazy val serde: Seq[ModuleID] = Seq(
     "dev.zio" %% "zio-json" % Versions.jsonZio
+  )
+
+  lazy val zioKafka: Seq[ModuleID] = Seq(
+    "dev.zio" %% "zio-kafka" % "2.7.4"
   )
 
   lazy val tapir: Seq[ModuleID] = Seq(
@@ -41,7 +44,7 @@ object Dependencies {
     "dev.zio"    %% "zio-interop-cats"    % "23.1.0.2"
   )
 
-  lazy val configZio: Seq[ModuleID] = Seq(
+  lazy val zioConfig: Seq[ModuleID] = Seq(
     "dev.zio" %% "zio-config"          % Versions.configZio,
     "dev.zio" %% "zio-config-typesafe" % Versions.configZio,
     "dev.zio" %% "zio-config-magnolia" % Versions.configZio
@@ -52,8 +55,8 @@ object Dependencies {
     "io.getquill" %% "quill-jdbc-zio"       % "4.6.0",
     "mysql"        % "mysql-connector-java" % "8.0.33"
   )
-  val application: Seq[ModuleID]    = zio ++ zioTest ++ tapir ++ http4s ++ serde ++ configZio
-  val infrastructure: Seq[ModuleID] = zio ++ zioTest ++ configZio ++ mysql
+  val application: Seq[ModuleID]    = zio ++ zioTest ++ tapir ++ http4s ++ serde ++ zioConfig
+  val infrastructure: Seq[ModuleID] = zio ++ zioTest ++ zioConfig ++ zioKafka ++ mysql
   val domain: Seq[ModuleID]         = zio ++ zioTest
   val client: Seq[ModuleID]         = config ++ zio
 
