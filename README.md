@@ -25,6 +25,21 @@ the configured topic. Also, you can use file under /docker-compose to set up Kaf
 
 # How To
 
+## prepare infrastucture
+### initialize database
+In order to create a local database instance run following command:
+
+        docker-compose -f docker-compose/docker-compose-db.yml up
+
+In order to run flyway migration run following command after local database instance is up & running:
+
+        docker-compose -f docker-compose/docker-compose-db.yml --profile install up mysql-flyway
+
+### initialize kafka cluster
+In order to create a local kafka cluster run following command:
+
+        docker-compose -f docker-compose/docker-compose.yaml up
+
 ## run application
 In order to run the application following `sbt` command needs to executed via a terminal
 
