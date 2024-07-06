@@ -58,6 +58,6 @@ object Dependencies {
   val application: Seq[ModuleID]    = zio ++ zioTest ++ tapir ++ http4s ++ serde ++ zioConfig
   val infrastructure: Seq[ModuleID] = zio ++ zioTest ++ zioConfig ++ zioKafka ++ mysql
   val domain: Seq[ModuleID]         = zio ++ zioTest
-  val client: Seq[ModuleID]         = config ++ zio
+  val client: Seq[ModuleID]         = zio ++ zioConfig ++ zioKafka
 
 }

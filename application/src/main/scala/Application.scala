@@ -4,6 +4,8 @@ import http.Http4sServer
 import http.handler.impl.GameHandlerImpl
 import http.route.impl.{GameRouteImpl, HealthRouteImpl, OpenApiRouteImpl}
 import http.route.{GameRoute, HealthRoute, HttpRoute}
+import kafka.consumer.EventsConsumer
+import kafka.consumer.impl.EventsConsumerImpl
 import kafka.producer.impl.EventsProducerImpl
 import mysql.{MysqlConnection, MysqlCtx}
 import repository.impl.GameRepositoryImpl
@@ -24,8 +26,10 @@ object Application extends ZIOAppDefault {
       httpServerPort <- ZIO.serviceWith[HttpConfig](_.port)
       _ <- ZIO.logInfo(s"Setting up http server on port $httpServerPort...")
       f1 <- Http4sServer.run(routes = routes, httpServerPort).fork
+      consumer <- ZIO.service[EventsConsumer]
+      f2 <- consumer.consume.fork
       _ <- ZIO.logInfo("Http server up & running")
-      _ <- Fiber.collectAll(List(f1)).join
+      _ <- Fiber.collectAll(List(f1, f2)).join
     yield ()
 
   }.provide(
@@ -46,7 +50,8 @@ object Application extends ZIOAppDefault {
     MysqlConnection.ctx,
     MysqlConnection.ds,
     EventsProducerImpl.live,
-    KafkaConfig.live
+    KafkaConfig.live,
+    EventsConsumerImpl.live
   )
 
   private def getAllRoutes = {

@@ -20,16 +20,10 @@ lazy val domain = (project in file("domain"))
     libraryDependencies ++= Dependencies.domain
   )
 
-//lazy val client = (project in file("client"))
-//  .settings(
-//    name := "client",
-//    libraryDependencies ++= Dependencies.client
-//  )
-
 lazy val root = (project in file("."))
   .aggregate(application, infrastructure, domain)
   .settings(
-    name := "recruitment-task-beone",
-    run := (application / Compile / run).evaluated,
+    name                := "recruitment-task-beone",
+    run                 := (application / Compile / run).evaluated,
     Global / cancelable := false
   )

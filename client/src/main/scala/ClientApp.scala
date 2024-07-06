@@ -1,33 +1,31 @@
-import configuration.AppConfiguration
-import zio.kafka.consumer.{Consumer, ConsumerSettings, Subscription}
-import zio.kafka.serde.Serde
-import zio.{Scope, UIO, ZIO, ZIOAppArgs, ZIOAppDefault, ZLayer}
+import cfg.{ConfigProvider, KafkaConfiguration}
+import kafka.consumer.EventsKafkaConsumer
+import zio.{Fiber, Scope, ZIO, ZIOAppArgs, ZIOAppDefault, ZLayer}
 
 /*
   This is only test code, made to make testing easier. Please do not use it in production or use it as an example.
  */
-object ClientApp extends ZIOAppDefault with AppConfiguration {
-  override def run: ZIO[Any with ZIOAppArgs with Scope, Any, Any] = consumerStream
+object ClientApp extends ZIOAppDefault {
+  override val bootstrap: ZLayer[ZIOAppArgs, Any, Any] = ConfigProvider.hocon
 
-  private val consumerSettings: ConsumerSettings =
-    ConsumerSettings(List(configuration.kafka.address))
-      .withGroupId(configuration.kafka.group)
-      .withClientId(configuration.kafka.client)
+  override def run: ZIO[Any with ZIOAppArgs with Scope, Any, Any] = {
+    for
+      eventsConsumer <- ZIO.service[EventsKafkaConsumer]
+      f1 <- eventsConsumer.consume().fork
+      _ <- Fiber.collectAll(List(f1)).join
+    yield ()
 
-  private val subscription = Subscription.topics(configuration.kafka.topic)
+  }.provide(KafkaConfiguration.live, EventsKafkaConsumer.live)
 
-  private val consumerLayer = ZLayer.scoped(Consumer.make(consumerSettings))
-
-  private val consumerStream: UIO[Unit] = Consumer
-    .plainStream(
-      subscription,
-      Serde.string,
-      Serde.string
-    )
-    .tap { record => ZIO.log(s"Received ${record.key}: ${record.value}") }
-    .mapZIO(_.offset.commit)
-    .provideLayer(consumerLayer)
-    .runDrain
-    .orDie
+//  private val consumerLayer = ZLayer.scoped {
+//    for
+//      kafkaCfg <- ZIO.service[KafkaConfiguration]
+//      consumerSettings = ConsumerSettings(List(kafkaCfg.address))
+//        .withGroupId(kafkaCfg.group)
+//        .withClientId(kafkaCfg.client)
+//        .withOffsetRetrieval(OffsetRetrieval.Auto(AutoOffsetStrategy.Earliest))
+//      consumer <- Consumer.make(consumerSettings)
+//    yield consumer
+//  }
 
 }

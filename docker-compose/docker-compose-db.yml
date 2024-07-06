@@ -11,7 +11,7 @@ services:
       MYSQL_PASSWORD: adminpass
       MYSQL_DATABASE: db
     networks:
-      - emmajk-network
+      - my-app-network
   mysql-flyway:
     image: flyway/flyway:10.15.0
     profiles:
@@ -26,7 +26,7 @@ services:
       - -password=root
       - migrate
     networks:
-      - emmajk-network
+      - my-app-network
 networks:
-  emmajk-network:
-    name: emmajk-network
+  my-app-network:
+    name: my-app-network
