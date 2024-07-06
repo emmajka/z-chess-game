@@ -31,4 +31,4 @@ In order to run the application following `sbt` command needs to executed via a 
         sbt application/run
 
 ## open API
-Open API documentation is available under `http://localhost:8081/docs`
+Open API documentation is available under `http://localhost:8099/docs`
